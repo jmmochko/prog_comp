@@ -1,0 +1,74 @@
+#include <bits/stdc++.h>
+#define FIN ios::sync_with_stdio(0);cin.tie(0);cout.tie(0)
+#define pb push_back
+#define fore(a,b,c) for(int a=b; a<c; ++a)
+#define dfore(a,b,c) for(int a=b; a>=c; --a)
+#define SZ(a) ((int)a.size())
+#define fst first
+#define snd second
+#define show(a) cout<<a<<"\n"
+#define showAll(a) for(auto i:a) cout<<i<<" ";cout<<"\n"
+#define input(a) for(auto& i:a) cin>>i
+#define all(a) a.begin(),a.end()
+#define DGB(a) cout<<#a<<" = "<<a<<"\n"
+#define RAYA cout<<"=============="<<"\n"
+#define pii pair<int,int>
+#define pll pair<ll,ll>
+#define MAXN 200005
+#define ALPH 26
+#define M 1000000007
+#define MAXINT (1<<30)
+#define MAXll (1ll<<60)
+#define PI 3.141592653
+using namespace std;
+typedef long long ll;
+typedef unsigned int ui;
+typedef unsigned long long ull;
+
+//El Vasito is love, El Vasito is life
+
+bool can(ll k, vector<ll> &nums){
+    ll w1=nums[0]+k,w2,w3;
+    auto it = upper_bound(all(nums),w1+k);
+    if(it==nums.end())return true;
+    w2 = nums[it-nums.begin()]+k;
+    it = upper_bound(all(nums),w2+k);
+    if(it==nums.end())return true;
+    w3 = nums[it-nums.begin()]+k;
+    return w3+k>=nums[SZ(nums)-1];
+}
+
+void solve(){
+    int n;
+    cin>>n;
+    vector<ll> nums(n);
+    input(nums);
+    if(n<=3){
+        show(0);
+        return;
+    }
+    sort(all(nums));
+    ll l=-1,r=1000000001,m;
+    while(l+1<r){
+        m = (l+r)/2ll;
+        if(can(m,nums)){
+            r = m;
+        }
+        else{
+            l = m;
+        }
+    }
+    show(r);
+}
+
+int main(){
+    FIN;
+    int t = 1;
+    cin>>t;
+    while(t--){
+        solve();
+    }
+    return 0;
+}
+
+//A man may play the dutch defense but must never defend the dutch.
