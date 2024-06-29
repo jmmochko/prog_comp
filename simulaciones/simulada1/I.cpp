@@ -27,11 +27,22 @@ typedef unsigned long long ull;
 
 int main(){
     FIN;
+    ifstream cin("important.in");
+    ofstream cout("important.out");
     int n;
     cin>>n;
     vector<string> logs(n);
-    input(logs);
-    int i = 0;
-    
+    //random empty line
+    getline(cin,logs[0]);
+    fore(i,0,n){
+        getline(cin,logs[i]);
+    }
+    show("Yes");
+    fore(i,0,n-1){
+        cout<<'('<<logs[i][0]<<"|(~"<<logs[i][0]<<"))&";
+    }
+    cout<<'('<<logs[n-1][0]<<"|(~"<<logs[n-1][0]<<"))\n";
+    cin.close();
+    cout.close();
     return 0;
 }
