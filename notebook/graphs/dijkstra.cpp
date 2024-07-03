@@ -6,7 +6,7 @@
 #define snd second 
 typedef long long ll;
 using namespace std;
-//---
+
 vector<pair<int,int> > g[MAXN];  // u->[(v,cost)]
 ll dist[MAXN];
 void dijkstra(int x){
