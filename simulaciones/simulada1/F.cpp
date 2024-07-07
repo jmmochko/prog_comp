@@ -57,7 +57,6 @@ struct STree { // segment tree for oper over lls
 	ll query(ll a, ll b){return query(1,0,n,a,b);}
 }; // usage: STree rmq(n);rmq.init(x);rmq.upd(i,v);rmq.query(s,e);
 
-
 void solve(vector<ll> &nums){
     STree tree(SZ(nums));
     tree.init(nums);
