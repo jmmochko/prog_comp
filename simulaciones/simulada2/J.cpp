@@ -33,10 +33,10 @@ int n;
 ll f(int i, int r, vector<ll> &dp, vector<ll> &meenter){//minimum cost in time at position i
     if(dp[i]!=MAXll)return dp[i];
     if(i>=n-1)return 0;
-    if(i+r>=n-1){
+    if(i+r>=n){
         dp[i] = 0;
         return 0;
-    } 
+    }
     fore(j,i+1,i+r+1)dp[i] = min(meenter[j]+f(j,r,dp,meenter),dp[i]);
     return dp[i];
 }
@@ -55,8 +55,6 @@ int main(){
     cin>>n>>t;
     vector<ll> cards(n-1);
     input(cards);
-    int a[n];
-    fore(i,0,n)a[i]=MAXINT;
     vector<ll> meenter;
     meenter.push_back(0);
     fore(i,0,n-2){
@@ -65,7 +63,7 @@ int main(){
         meenter.push_back(e);
     }
     meenter.push_back(0);
-    int l = -1, r = n;
+    int l = 0, r = n;
     while(l+1<r){
         int m = (l+r)/2;
         if(can(meenter,m))r = m;

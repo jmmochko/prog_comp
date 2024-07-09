@@ -28,36 +28,65 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-ll solve(int a){
-    ll res = 1;
-    while(a%2==0){
-        a/=2;
-        res*=2;
+vector<ll> solve(ll a){
+    if(a<=3){
+        vector<ll> res;
+        res.push_back(a);
+        return res;
     }
-    while(a%3==0){
-        a/=3;
-        res*=3;
+    if(a%2==0){
+        vector<ll> res = solve(a/2);
+        fore(i,0,SZ(res))res[i] = res[i]<<1;
+        return res;
     }
+    ll cmp = 3;
+    while(cmp<a)cmp*=3;
+    if(cmp>a)cmp/=3;
+    vector<ll> res = solve(a-cmp);
+    res.push_back(cmp);
     return res;
 }
 
 int main(){
-    FIN;
+    //FIN;
+    /*fore(p,0,100){
+        ll target = rand()%1000000000000000000;
+        vector<ll> res = solve(target);
+        ll acc = 0;
+        fore(k,0,SZ(res))acc+=res[k];
+        if(acc!=target)show("BAD ADDITION");
+        sort(all(res));
+        int i = 0;
+        while(i<SZ(res) && res[i]==0){
+            ++i;
+        }
+        DGB(target);
+        show(SZ(res)-i);
+        showAll(res);
+    }*/
+    ifstream cin("distribution.in");
+    ofstream cout("distribution.out");
     int t = 1;
     cin>>t;
     while(t--){
         ll n;
         cin>>n;
-        int res = 0;
-        vector<ll> r;
-        while(n>0){
-            r.push_back(solve(n));
-            n -= r[SZ(r)-1];
-            DGB(n);
+        if(n<=4){
+            show(1);
+            show(n);
+            continue;
         }
-        show(SZ(r));
-        showAll(r);
+        vector<ll> res = solve(n);
+        sort(all(res));
+        int i = 0;
+        while(i<SZ(res) && res[i]==0){
+            ++i;
+        }
+        show(SZ(res)-i);
+        fore(k,i,SZ(res))cout<<res[k]<<" ";cout<<'\n';
     }
+    cin.close();
+    cout.close();
     return 0;
 }
 
