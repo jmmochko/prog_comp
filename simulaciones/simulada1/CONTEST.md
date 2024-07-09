@@ -1,3 +1,3 @@
 simulada del 2008-2009 ACM-ICPC, NEERC, Northern Subregional Contest
-https://codeforces.com/gymRegistration/100623/virtual/true
-Quedamos...
+https://codeforces.com/gym/100623
+Quedamos 226
