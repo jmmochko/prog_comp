@@ -27,35 +27,55 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
+#define oper(a,b) min(a,b)
+#define NEUT MAXll
+struct STree { // segment tree for oper over lls
+	vector<ll> st;ll n;
+	STree(ll n): st(4*n+5,NEUT), n(n) {}
+	void init(ll k, ll s, ll e, ll *a){
+		if(s+1==e){st[k]=a[s];return;}
+		ll m=(s+e)/2;
+		init(2*k,s,m,a);init(2*k+1,m,e,a);
+		st[k]=oper(st[2*k],st[2*k+1]);
+	}
+	void upd(ll k, ll s, ll e, ll p, ll v){
+		if(s+1==e){st[k]=v;return;}
+		ll m=(s+e)/2;
+		if(p<m)upd(2*k,s,m,p,v);
+		else upd(2*k+1,m,e,p,v);
+		st[k]=oper(st[2*k],st[2*k+1]);
+	}
+	ll query(ll k, ll s, ll e, ll a, ll b){
+		if(s>=b||e<=a)return NEUT;
+		if(s>=a&&e<=b)return st[k];
+		ll m=(s+e)/2;
+		return oper(query(2*k,s,m,a,b),query(2*k+1,m,e,a,b));
+	}
+	void init(ll *a){init(1,0,n,a);}
+	void upd(ll p, ll v){upd(1,0,n,p,v);}
+	ll query(ll a, ll b){return query(1,0,n,a,b);}
+}; // usage: STree rmq(n);rmq.init(x);rmq.upd(i,v);rmq.query(s,e);
+
 ll t;
 int n;
+vector<ll> meenter;
 
-ll f(int i, int r, vector<ll> &dp, vector<ll> &meenter){//minimum cost in time at position i
-    if(dp[i]!=MAXll)return dp[i];
-    if(i>=n-1)return 0;
-    if(i+r>=n){
-        dp[i] = 0;
-        return 0;
-    }
-    fore(j,i+1,i+r+1)dp[i] = min(meenter[j]+f(j,r,dp,meenter),dp[i]);
-    return dp[i];
-}
-
-bool can(vector<ll> &meenter, int r){
-    if(r>=n-1)return true;
-    vector<ll> dp(n,MAXll);
-    ll res = f(0,r,dp,meenter);
-    return res<=t;
+bool can(int r){
+    ll to_tree[n];
+    memset(to_tree,0,8*n);
+    STree tree(n);
+    tree.init(to_tree);
+    fore(i,1,n)tree.upd(i,meenter[i]+tree.query(i-r,i));
+    return tree.query(n-1,n)<t;
 }
 
 int main(){
     FIN;
-    //ifstream cin("journey.in");
-    //ofstream cout("journey.out");
+    ifstream cin("journey.in");
+    ofstream cout("journey.out");
     cin>>n>>t;
     vector<ll> cards(n-1);
     input(cards);
-    vector<ll> meenter;
     meenter.push_back(0);
     fore(i,0,n-2){
         ll e;
@@ -63,17 +83,18 @@ int main(){
         meenter.push_back(e);
     }
     meenter.push_back(0);
-    int l = 0, r = n;
+    int l = 0, r = n-1;
+    // binary search over minimun range needed
     while(l+1<r){
         int m = (l+r)/2;
-        if(can(meenter,m))r = m;
+        if(can(m))r = m;
         else l = m;
     }
-    ll res = MAXll;
-    fore(i,l,n-1)res = min(cards[i],res);
+    ll res = cards[n-2];
+    fore(i,l,n-2)res = min(cards[i],res);
     show(res);
-    //cin.close();
-    //cout.close();
+    cin.close();
+    cout.close();
     return 0;
 }
 
