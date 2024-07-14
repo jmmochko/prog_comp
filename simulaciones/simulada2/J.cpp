@@ -56,17 +56,16 @@ struct STree { // segment tree for oper over lls
 	ll query(ll a, ll b){return query(1,0,n,a,b);}
 }; // usage: STree rmq(n);rmq.init(x);rmq.upd(i,v);rmq.query(s,e);
 
-ll t;
-int n;
+ll t,n;
 vector<ll> meenter;
 
-bool can(int r){
+bool can(ll r){
     ll to_tree[n];
     memset(to_tree,0,8*n);
     STree tree(n);
     tree.init(to_tree);
-    fore(i,1,n)tree.upd(i,meenter[i]+tree.query(i-r,i));
-    return tree.query(n-1,n)<t;
+    fore(i,1,n)tree.upd(i,meenter[i]+tree.query(max(i-r,0ll),i));
+    return tree.query(n-1,n)<=t;
 }
 
 int main(){
@@ -83,10 +82,10 @@ int main(){
         meenter.push_back(e);
     }
     meenter.push_back(0);
-    int l = 0, r = n-1;
+    ll l = 0, r = n-1;
     // binary search over minimun range needed
     while(l+1<r){
-        int m = (l+r)/2;
+        ll m = (l+r)/2;
         if(can(m))r = m;
         else l = m;
     }
