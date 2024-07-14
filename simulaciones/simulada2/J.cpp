@@ -1,38 +1,24 @@
 #include <bits/stdc++.h>
-#define FIN ios::sync_with_stdio(0);cin.tie(0);cout.tie(0)
-#define pb push_back
-#define fore(a,b,c) for(int a=b; a<c; ++a)
-#define dfore(a,b,c) for(int a=b; a>=c; --a)
-#define SZ(a) ((int)a.size())
 #define fst first
 #define snd second
-#define show(a) cout<<a<<"\n"
-#define showAll(a) for(auto i:a) cout<<i<<" ";cout<<"\n"
-#define input(a) for(auto& i:a) cin>>i
-#define all(a) a.begin(),a.end()
-#define DGB(a) cout<<#a<<" = "<<a<<"\n"
-#define RAYA cout<<"=============="<<"\n"
-#define pii pair<int,int>
-#define pll pair<ll,ll>
-#define MAXN 200005
-#define ALPH 26
-#define M 1000000007
-#define MAXINT (1<<30)
-#define MAXll (1ll<<60)
-#define PI 3.141592653
+#define fore(i,a,b) for(ll i=a,ThxDem=b;i<ThxDem;++i)
+#define pb push_back
+#define ALL(s) s.begin(),s.end()
+#define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
+#define SZ(s) ll(s.size())
 using namespace std;
 typedef long long ll;
-typedef unsigned int ui;
-typedef unsigned long long ull;
+typedef pair<ll,ll> ii;
 
-//El Vasito is love, El Vasito is life
+ll n,t;
 
-#define oper(a,b) min(a,b)
-#define NEUT MAXll
-struct STree { // segment tree for oper over lls
+
+#define oper min
+#define NEUT LONG_LONG_MAX
+struct STree { // segment tree for min over integers
 	vector<ll> st;ll n;
 	STree(ll n): st(4*n+5,NEUT), n(n) {}
-	void init(ll k, ll s, ll e, ll *a){
+	void init(ll k, ll s, ll e, vector<ll> &a){
 		if(s+1==e){st[k]=a[s];return;}
 		ll m=(s+e)/2;
 		init(2*k,s,m,a);init(2*k+1,m,e,a);
@@ -51,50 +37,57 @@ struct STree { // segment tree for oper over lls
 		ll m=(s+e)/2;
 		return oper(query(2*k,s,m,a,b),query(2*k+1,m,e,a,b));
 	}
-	void init(ll *a){init(1,0,n,a);}
+	void init(vector<ll> &a){init(1,0,n,a);}
 	void upd(ll p, ll v){upd(1,0,n,p,v);}
 	ll query(ll a, ll b){return query(1,0,n,a,b);}
 }; // usage: STree rmq(n);rmq.init(x);rmq.upd(i,v);rmq.query(s,e);
 
-ll t,n;
-vector<ll> meenter;
+bool can(vector<ll> &re, ll range){
+    // arrancamos de atras hacia adelante
+    STree st(n);
+    st.upd(n-1,n-1); // start position
+    for(ll i=n-2; i>=0 ;--i){
+        ll res = st.query(i + 1, min(n, i + range + 1)) - i; // obtenemos la posicion minima
+        if(i>0) st.upd(i,res+re[i]+i); // actualizamos la posicion, sumandole el valor de reentrada
+        else st.upd(0,res); // caso final
+    }
 
-bool can(ll r){
-    ll to_tree[n];
-    memset(to_tree,0,8*n);
-    STree tree(n);
-    tree.init(to_tree);
-    fore(i,1,n)tree.upd(i,meenter[i]+tree.query(max(i-r,0ll),i));
-    return tree.query(n-1,n)<=t;
+    return st.query(0,1)<=t;
 }
+ 
 
 int main(){
     FIN;
     ifstream cin("journey.in");
     ofstream cout("journey.out");
-    cin>>n>>t;
-    vector<ll> cards(n-1);
-    input(cards);
-    meenter.push_back(0);
+    cin >> n >> t;
+
+    vector<ll> c(n-1);
+    vector<ll> re;
+
+    re.pb(0);
+
+    fore(i,0,n-1) cin >> c[i];
+
     fore(i,0,n-2){
-        ll e;
-        cin>>e;
-        meenter.push_back(e);
+        ll aux; cin >> aux; re.pb(aux);
     }
-    meenter.push_back(0);
-    ll l = 0, r = n-1;
-    // binary search over minimun range needed
-    while(l+1<r){
+
+    re.pb(0);
+
+    ll l = 0, r = n;
+    while(l <= r){
         ll m = (l+r)/2;
-        if(can(m))r = m;
-        else l = m;
+        if(can(re,m)) r = m-1;
+        else l = m+1;
     }
-    ll res = cards[n-2];
-    fore(i,l,n-2)res = min(cards[i],res);
-    show(res);
+ 
+    ll res = c[n-2];
+    fore(i,l-1,n-1) res = min(c[i], res);
+    // cout << l << "\n";
+ 
+    cout << res << "\n";
+
     cin.close();
     cout.close();
-    return 0;
 }
-
-//A man may play the dutch defense but must never defend the dutch.
