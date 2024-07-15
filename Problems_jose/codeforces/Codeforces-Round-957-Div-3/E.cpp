@@ -32,21 +32,15 @@ string s,aux;
 void solve(){
     ll n;
     cin>>n;
-    s = "";
-    aux=to_string(n);
+    s = to_string(n);
     vector<pll> ppairs;
     fore(a,1,10001){
-        if(SZ(s)<10001)fore(i,0,SZ(aux)){
-            s.push_back(aux[i]);
-        }
-        ll an = a*n;
-        //find possible bs to pair
-        ll cmp = 0;
-        fore(i,0,SZ(s)-1){
-            cmp*=10;
-            cmp+=s[i]-'0';
-            ll b = SZ(s) - i - 1;
-            if(an-b==cmp)ppairs.push_back({a,b});
+        fore(b,max(1,SZ(s)*a-5),SZ(s)*a){
+            ll x = n*a-b,y=0;
+            fore(i,0,SZ(s)*a-b){
+                y = y *10 + (s[i%SZ(s)]-'0');
+            }
+            if(x==y)ppairs.push_back({a,b});
         }
     }
     show(SZ(ppairs));
