@@ -27,17 +27,29 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-void solve(){
-
-}
-
 int main(){
     FIN;
-    int t = 1;
-    cin>>t;
-    while(t--){
-        solve();
+    int n,m,k,u,v;
+    cin>>n>>m>>k;
+    vector<vector<int>> g(n);
+    vector<int> in(n,0);//in degree of edge i
+    fore(i,0,m){
+        cin>>u>>v;
+        u--;v--;
+        g[u].push_back(v);
+        in[v]++;
     }
+    showAll(in);
+    vector<int> in0,out0;
+    fore(i,0,n){
+        if(SZ(g[i])==0)out0.push_back(i);
+        if(in[i]==0)in0.push_back(i);
+    }
+    int i = n-1;
+    vector<pii> ppairs;
+
+    show(SZ(ppairs));
+    fore(i,0,SZ(ppairs))cout<<ppairs[i].first<<" "<<ppairs[i].second<<'\n';
     return 0;
 }
 

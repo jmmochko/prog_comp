@@ -41,4 +41,4 @@ int main(){
     return 0;
 }
 
-//A man may play the dutch defense but must never defend the dutch.
+//Escuchen, corran la bola...
