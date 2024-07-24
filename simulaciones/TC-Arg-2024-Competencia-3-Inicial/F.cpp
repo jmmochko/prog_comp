@@ -15,7 +15,7 @@
 #define pii pair<int,int>
 #define pll pair<ll,ll>
 #define MAXN 200005
-#define ALPH 3
+#define ALPH 27
 #define M 1000000007
 #define MAXINT (1<<30)
 #define MAXll (1ll<<60)
@@ -26,8 +26,6 @@ typedef unsigned int ui;
 typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
-
-
 
 int main(){
     FIN;
@@ -45,11 +43,11 @@ int main(){
     fore(i,0,ALPH)psum31[i].push_back(0);
     fore(i,0,n){
         //record occurence
-        occs[s[i]-'a'].push_back(i);
+        occs[s[i]-'a'+1].push_back(i);
         //fill psums
         fore(j,0,ALPH)psum31[j].push_back(psum31[j][i]);
-        psum31[s[i]-'a'][i+1] += p31[i];
-        psum31[s[i]-'a'][i+1] = psum31[s[i]-'a'][i+1]%M;
+        psum31[s[i]-'a'+1][i+1] += p31[i];
+        psum31[s[i]-'a'+1][i+1] = psum31[s[i]-'a'+1][i+1]%M;
     }
     while(m--){
         bool res = true;
@@ -62,8 +60,6 @@ int main(){
         fore(i,0,ALPH){
             ll thing = (i*(((psum31[i][x+len] - psum31[i][x])+M)%M))%M;
             thing = (thing*p31[y-x])%M;
-            DGB(i);
-            DGB(thing);
             hashx = (hashx+thing)%M;
         }
         //match first occ of each letter in x side to its pair in y side
@@ -74,7 +70,7 @@ int main(){
             if(it==occs[i].end())continue;
             int loc = occs[i][it - occs[i].begin()];
             if(loc<x+len){
-                int match = s[loc + (y-x)]-'a';
+                int match = s[loc + (y-x)]-'a'+1;
                 if(used.count(match)){
                     res = false;
                     break;
@@ -89,18 +85,17 @@ int main(){
         }
         //calc hash for y
         ll hashy = 0;
+        //a->c match[a] == c
+        //a*(31**1+...31**8)
+        //c*(31**1+...31**8)
         fore(i,0,ALPH){
             if(matches[i]==-1)continue;
-            ll thing = (matches[i]*(((psum31[matches[i]][y+len] - psum31[matches[i]][y])+M)%M))%M;
-            DGB(matches[i]);
-            DGB(thing);
+            ll thing = (i*(((psum31[matches[i]][y+len] - psum31[matches[i]][y])+M)%M))%M;
             hashy = (hashy+thing)%M;
         }
         //check if equal
-        DGB(hashx);DGB(hashy);
         if(hashx==hashy)show("YES");
         else show("NO");
-        RAYA;
     }
     return 0;
 }
@@ -114,4 +109,3 @@ i = 1
 ==============
 i = 2
 0 0 0 0 29791 29791 29791 29791*/
-
