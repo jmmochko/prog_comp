@@ -27,31 +27,32 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
+struct Info{
+    int vlen,cnt;
+};
+
+Info process(string &s){
+    Info res;
+    res.cnt = 0;
+    res.vlen = SZ(s);
+    fore(i,0,SZ(s)){
+        if(s[i]='(')++res.cnt;
+        else --res.cnt;
+        if(res.cnt<0)res.vlen = min(res.vlen,i);
+    }
+    return res;
+}
+
 void solve(){
-    ll n,a,b,x,y,w,z;
-    cin>>n>>a>>b;
-    ll res = 0;
-    multiset<pll> Vs;
-    set<pll> usedVs;
-    multiset<ll> aVxVy;
-    set<ll> usedaVxVys;
+    int n;
+    cin>>n;
+    string s;
+    vector<Info> ss(n);
     fore(i,0,n){
-        cin>>x>>w>>z;
-        y = a*x+b;
-        Vs.insert({w,z});
-        usedVs.insert({w,z});
-        aVxVy.insert(a*w-z);
-        usedaVxVys.insert(a*w-z);
+        cin>>s;
+        ss[i] = process(s);
     }
-    for(auto e: usedaVxVys){
-        ll aux = aVxVy.count(e);
-        res += aux*(aux-1);
-    }
-    for(auto e: usedVs){
-        ll aux = Vs.count(e);
-        res -= aux*(aux-1);
-    }
-    show(res);
+    
 }
 
 int main(){
