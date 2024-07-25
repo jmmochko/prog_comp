@@ -27,29 +27,52 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-void solve(){
-    ll l=1, r = 1000000000;
-    while(l+1<r){
-        ll m = (l+r)/2;
-        cout<<"? "<<m<<" "<<r<<'\n';
-        fflush(stdout);
-        char res;
-        cin>>res;
-        if(res=='x')l=m;
-        else r=m;
-    }
-    cout<<"! "<<l<<'\n';
-    fflush(stdout);
-}
-
 int main(){
-    string s;
-    do{
-        cin>>s;
-        if(s[0]=='s')solve();
+
+    while(1){
+        string inp; cin >> inp;
+        if(inp[0] == 'm' || inp[0] == 'e'){
+            break;
+        }else{
+            // ll cnt = 0;
+            ll a=0,b=1;
+            cout << "? " << a << " " << b << "\n";
+            fflush(stdout);
+            cin >> inp;
+            // cnt++;
+            // cout << "counter: " << cnt << "\n";
+            if(inp[0] == 'x') cout << "! 1\n"; // caso base
+            else{
+                fore(i,0,30){
+                    // cnt++;
+                    // RAYA;
+                    a = 1LL << i, b = 1LL << (i+1);
+                    cout << "? " << a << " " << b << "\n";
+                    // cout << "counter: " << cnt << "\n";
+                    fflush(stdout);
+                    cin >> inp;
+                    if(inp[0] == 'x') break; // encontre los bordes
+                }
+                while(a+1<b){
+                    // cnt++;
+                    // RAYA;
+                    // cout << "counter: " << cnt << "\n";
+                    ll m = (a+b)/2;
+                    cout << "? " << a << " " << m << "\n";
+                    fflush(stdout);
+                    cin >> inp;
+                    if(inp[0] == 'x') b = m;
+                    else  a = m;
+                }
+                cout << "! " << a+1 << "\n";
+                fflush(stdout);
+
+            }
+        }
     }
-    while(s[0]=='s');
+
+
     return 0;
 }
 
-//Escuchen, corran la bola...
+//A man may play the dutch defense but must never defend the dutch.
