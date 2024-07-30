@@ -77,7 +77,7 @@ void solve(){
     sort(all(ord));
     STree tree(n);
     tree.init(nums);
-    vector<int> res(n,0); 
+    vector<int> res(n,0);
     for(auto e: ord){
         int inicio = e.second;
         int nextp = find(nums[inicio]/2,inicio+1,n,tree);

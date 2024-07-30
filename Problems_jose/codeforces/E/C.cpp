@@ -27,32 +27,36 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-string s;
-
-ll f(int i, bool l){
-    ll res = 0;
-    if(i>=SZ(s))return 1;
-    if(l){
-        res = (s[i]-'0')*f(i+1,l);
-        if(s[i]>'0')res = max(res,((s[i]-'0')-1)*f(i+1,false));
-        res = max(f(i+1,false),res);
-        return res;
-    }
-    res = f(i+1,l)*9;
-    return res;
-}
-
 void solve(){
-    ll n;
+    int n;
     cin>>n;
-    s=to_string(n);
-    show(f(0,true));
+    string s;
+    cin>>s;
+    int cnt = 0;
+    fore(i,0,n){
+        if(i%2==0){
+            if(cnt>=0)s[i]='(';
+            else s[i]=')';
+        }
+        if(s[i]=='(')--cnt;
+        else ++cnt;
+    }
+    stack<int> ops;
+    ll res = 0;
+    fore(i,0,n){
+        if(s[i]=='(')ops.push(i);
+        else{
+            res += i-ops.top();
+            ops.pop();
+        } 
+    }
+    show(res);
 }
 
 int main(){
     FIN;
     int t = 1;
-    //cin>>t;
+    cin>>t;
     while(t--)solve();
     return 0;
 }

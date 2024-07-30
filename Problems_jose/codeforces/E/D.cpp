@@ -18,7 +18,7 @@
 #define ALPH 26
 #define M 1000000007
 #define MAXINT (1<<30)
-#define MAXll (1ll<<60)
+#define MAXll (1ll<<61)
 #define PI 3.141592653
 using namespace std;
 typedef long long ll;
@@ -27,32 +27,42 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-string s;
-
-ll f(int i, bool l){
-    ll res = 0;
-    if(i>=SZ(s))return 1;
-    if(l){
-        res = (s[i]-'0')*f(i+1,l);
-        if(s[i]>'0')res = max(res,((s[i]-'0')-1)*f(i+1,false));
-        res = max(f(i+1,false),res);
-        return res;
+ll equalize(int v, vector<vector<int>> &tree, vector<ll> &nums){
+    ll res = nums[v];
+    if(SZ(tree[v])==0)return res;
+    ll small = MAXll;
+    for(int u: tree[v]){
+        small = min(small,equalize(u,tree,nums));
     }
-    res = f(i+1,l)*9;
-    return res;
+    if(small>res){
+        res = (small+res)/2ll;
+    }
+    return min(res,small);
 }
 
 void solve(){
-    ll n;
+    int n;
     cin>>n;
-    s=to_string(n);
-    show(f(0,true));
+    vector<vector<int>> tree(n);
+    vector<ll> nums(n);
+    input(nums);
+    fore(i,1,n){
+        int p;
+        cin>>p;
+        --p;
+        tree[p].push_back(i);
+    }
+    ll small = MAXll;
+    for(int v: tree[0]){
+        small = min(small,equalize(v,tree,nums));
+    }
+    show(nums[0]+small);
 }
 
 int main(){
     FIN;
     int t = 1;
-    //cin>>t;
+    cin>>t;
     while(t--)solve();
     return 0;
 }
