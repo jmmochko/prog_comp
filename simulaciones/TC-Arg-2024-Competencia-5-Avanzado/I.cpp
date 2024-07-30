@@ -27,39 +27,74 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
+#define oper(a,b) min(a,b)
+#define NEUT (1ll<<60)
+struct STree { // segment tree for oper over lls
+	vector<ll> st;ll n;
+	STree(ll n): st(4*n+5,NEUT), n(n) {}
+	void init(ll k, ll s, ll e, ll *a){
+		if(s+1==e){st[k]=a[s];return;}
+		ll m=(s+e)/2;
+		init(2*k,s,m,a);init(2*k+1,m,e,a);
+		st[k]=oper(st[2*k],st[2*k+1]);
+	}
+	void upd(ll k, ll s, ll e, ll p, ll v){
+		if(s+1==e){st[k]=v;return;}
+		ll m=(s+e)/2;
+		if(p<m)upd(2*k,s,m,p,v);
+		else upd(2*k+1,m,e,p,v);
+		st[k]=oper(st[2*k],st[2*k+1]);
+	}
+	ll query(ll k, ll s, ll e, ll a, ll b){
+		if(s>=b||e<=a)return NEUT;
+		if(s>=a&&e<=b)return st[k];
+		ll m=(s+e)/2;
+		return oper(query(2*k,s,m,a,b),query(2*k+1,m,e,a,b));
+	}
+	void init(ll *a){init(1,0,n,a);}
+	void upd(ll p, ll v){upd(1,0,n,p,v);}
+	ll query(ll a, ll b){return query(1,0,n,a,b);}
+}; // usage: STree rmq(n);rmq.init(x);rmq.upd(i,v);rmq.query(s,e);
+
+int find(ll a, int l, int r, STree &tree){//finds first element smaller than a in range [l,r) -1 if none
+    while(l+1<r){
+        int m = (l+r)/2;
+        if(tree.query(l,m)<a)r=m;
+        else l = m;
+    }
+    if(tree.query(l,l+1)>=a)return -1;
+    return l;
+}
+
 void solve(){
     int n;
     cin>>n;
-    vector<ll> nums(n);
+    ll nums[n];
     input(nums);
-    vector<int> dp(n,MAXINT),pseudo(n,1);
-    vector<pair<ll,int>> ord(n);
-    fore(i,0,n)ord[i] = {-nums[i],i};
+    fore(i,0,n)nums[i]=nums[i]<<1;
+    vector<pll> ord(n);
+    fore(i,0,n)ord[i]={-nums[i],i};
     sort(all(ord));
-    fore(k,0,n){
-        int j = ord[k].second,i=pseudo[ord[k].second];
-        DGB(j);
-        ll maxi = nums[j];
-        dp[j]=0;
-        while(i<2*n){
-            if(dp[(j+i)%n]<MAXINT)dp[j]+=dp[(i+j)%n];
-            maxi = max(maxi,nums[(i+j)%n]);
-            if(nums[(i+j)%n]<maxi/2+(maxi%2)){
-                DGB((j+i)%n);
-                show("BREAKEE");
-                break;
-                }
-            i++;
+    STree tree(n);
+    tree.init(nums);
+    vector<int> res(n,0); 
+    for(auto e: ord){
+        int inicio = e.second;
+        int nextp = find(nums[inicio]/2,inicio+1,n,tree);
+        if(nextp == -1)nextp = find(nums[inicio]/2,0,inicio,tree);
+        if(nextp == -1){
+            fore(i,0,n)cout<<"-1 ";cout<<'\n';
+            return;
         }
-        dp[j] += i;
-        fore(a,1,dp[j]+1){
-            pseudo[(j+a)%n] = max(pseudo[(j+a)%n],dp[j]-a);
+        if(nextp>inicio){
+            res[inicio] = (nextp-inicio)+res[nextp];
+            tree.upd(inicio,-MAXll);
+            continue;
         }
-        showAll(dp);
-        showAll(pseudo);
-        RAYA;
+        res[inicio] = (n-inicio)+nextp+res[nextp];
+        tree.upd(inicio,-MAXll);
     }
-    showAll(dp);
+    showAll(res);
 }
 
 int main(){
