@@ -39,4 +39,4 @@ int main(){
     return 0;
 }
 
-//Escuchen, corran la bola...
+//Gallardo 2: electric boogaloo

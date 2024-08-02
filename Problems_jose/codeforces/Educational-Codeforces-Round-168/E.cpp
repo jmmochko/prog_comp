@@ -14,7 +14,7 @@
 #define RAYA cout<<"=============="<<"\n"
 #define pii pair<int,int>
 #define pll pair<ll,ll>
-#define N 200005
+#define MAXN 200005
 #define ALPH 26
 #define M 1000000007
 #define MAXINT (1<<30)
@@ -27,67 +27,71 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-vector<int> dp;//min k such that monster is not fought
-multiset<int> seg[4*N+5];
-void build(int node,int l,int r){
-    if (l==r){
-        seg[node].insert(dp[l]);
-        return;
-    }int mid=(l+r)/2;
-    build(node*2,l,mid);
-    build(node*2+1,mid+1,r);
-    for (int i=l;i<=r;i++) seg[node].insert(dp[i]);
-    return;
-}
-void edit(int node,int l,int r,int idx,int val){
-    if (l==r){
-        seg[node].erase(dp[idx]);
-        seg[node].insert(val);
-        return;
-    }int mid=(l+r)/2;
-    if (idx<=mid) edit(node*2,l,mid,idx,val);
-    else edit(node*2+1,mid+1,r,idx,val);
-    seg[node].erase(dp[idx]);
-    seg[node].insert(val);
-    return;
-}
-int query(int node,int l,int r,int lx,int rx,int x){
-    if (l>rx || r<lx) return INT_MAX;
-    if (l>=lx && r<=rx){
-        auto it=seg[node].lower_bound(x);
-        if (it==seg[node].end()) return INT_MAX;
-        return *it;
-    }int mid=(l+r)/2;
-    return min(query(node*2,l,mid,lx,rx,x),query(node*2+1,mid+1,r,lx,rx,x));
-}
+
+#define oper(a,b) a+b
+#define NEUT 0
+struct STree { // segment tree for oper over lls
+	vector<ll> st;ll n;
+	STree(ll n): st(4*n+5,NEUT), n(n) {}
+	void init(ll k, ll s, ll e, ll *a){
+		if(s+1==e){st[k]=a[s];return;}
+		ll m=(s+e)/2;
+		init(2*k,s,m,a);init(2*k+1,m,e,a);
+		st[k]=oper(st[2*k],st[2*k+1]);
+	}
+	void upd(ll k, ll s, ll e, ll p, ll v){
+		if(s+1==e){st[k]=v;return;}
+		ll m=(s+e)/2;
+		if(p<m)upd(2*k,s,m,p,v);
+		else upd(2*k+1,m,e,p,v);
+		st[k]=oper(st[2*k],st[2*k+1]);
+	}
+	ll query(ll k, ll s, ll e, ll a, ll b){
+		if(s>=b||e<=a)return NEUT;
+		if(s>=a&&e<=b)return st[k];
+		ll m=(s+e)/2;
+		return oper(query(2*k,s,m,a,b),query(2*k+1,m,e,a,b));
+	}
+	void init(ll *a){init(1,0,n,a);}
+	void upd(ll p, ll v){upd(1,0,n,p,v);}
+	ll query(ll a, ll b){return query(1,0,n,a,b);}
+}; // usage: STree rmq(n);rmq.init(x);rmq.upd(i,v);rmq.query(s,e);
 
 void solve(){
-    dp.clear();
-    int n,q,e;
+    int n,q;
     cin>>n>>q;
-    vector<int> nums(n);
+    vector<int> nums(n),dp(n,0);//min k such that monster gets to fight, 0 if it always figths
     input(nums);
-    fore(i,0,n)dp.push_back(MAXINT);
-    dp[0] = nums[0]+1;
-    build(0,0,n-1);
+    STree tree(MAXN);//auxiliary stree :)
+    dp[0] = 0;
+    tree.upd(0,1);
     fore(i,1,n){
-        int l = -1,r=N;
+        DGB(i);
+        int l = 1, r = n+1;
         while(l+1<r){
             int m = (l+r)/2;
-            if(1+query(1,0,n-1,0,i,m)>nums[i]){
-                l = m;
-            }
+            DGB(m);
+            DGB(1+(tree.query(0,m))/m);
+            if(1+tree.query(0,m)/m>nums[i])l=m;
             else r = m;
         }
-        if(r!=N){
+        RAYA;
+        if(r!=n+1){
             dp[i] = r;
-            edit(0,0,n-1,i,r);
+            tree.upd(dp[i],tree.query(dp[i],dp[i]+1)+1);
+            
         }
+        else tree.upd(0,tree.query(0,1)+1);
+        DGB(dp[i]);
+        DGB(tree.query(dp[i],dp[i]+1));
     }
+    showAll(dp);
     while(q--){
         int i,x;
         cin>>i>>x;
-        if()
+        --i;
+        if(x>=dp[i])show("YES");
+        else show("NO");
     }
 }
 
