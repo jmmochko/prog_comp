@@ -27,41 +27,95 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-vector<pair<int,vector<int>>> g[MAXN];//cost as number of tickets of each price
+vector<pair<int,int>> g[MAXN];
+int stcost[MAXN];
 bool vis[MAXN];
 
-vector<int> dfs(int u){//amount of each bill paid in subtree
-    vector<int> cur(ALPH,0);
+void dfs(int u, int carry){
+    vis[u] = true;
     for(auto v: g[u]){
-        if(!vis[v.first]){
-            vector<int> cpm = dfs(v.first);
-            fore(i,0,ALPH)cur[i]+=cpm[i];
-        }
+        if(!vis[v.first])dfs(v.first,carry^v.second);
     }
+    stcost[u] = carry;
+}
+
+vector<pair<char,vector<int>>> trie;
+
+void trieAdd(string &s){
+    int v = 0;
+    fore(i,0,SZ(s)){
+        int next = -1;
+        fore(k,0,SZ(trie[v].second)){
+            if(trie[trie[v].second[k]].first==s[i])next = trie[v].second[k];
+        }
+        if(next==-1){
+            trie.push_back({s[i],{}});
+            next = SZ(trie)-1;
+            trie[v].second.push_back(next);
+        }
+        v = next;
+    }
+}
+
+string trieMaximize(string &s){
+    int v = 0;
+    string res="";
+    fore(i,0,SZ(s)){
+        int next = trie[v].second[0];
+        fore(k,0,SZ(trie[v].second)){
+            if(trie[trie[v].second[k]].first!=s[i])next = trie[v].second[k];
+        }
+        res.push_back(trie[next].first);
+        v = next;
+    }
+    return res;
+}
+
+string bitstring(int x){
+    string res = "";
+    int cmp = 0;
+    while((1ll<<cmp)<=x){
+        res.push_back((char)('0'+(bool)((1ll<<cmp)&x)));
+        ++cmp;
+    }
+    while(SZ(res)<31){
+        res.push_back('0');
+    }
+    reverse(all(res));
+    return res;
 }
 
 void solve(){
     int n;
     cin>>n;
     fore(i,0,n-1){
-        int u,v;
-        ll c;
-        cin>>u>>v>>c;
-        --u;--v;
-        //c to costs
-        vector<int> cur(ALPH,0);
-        fore(k,0,ALPH){
-            if(c&(1ll<<k)){
-                cur[k]++;
-            }
+        int a,b,c;
+        cin>>a>>b>>c;
+        --a;--b;
+        g[a].push_back({b,c});
+        g[b].push_back({a,c});
+    }
+    dfs(0,0);
+    //respond for all i max_{k in range n-1} stcost[i]^stcost[k]
+    trie.push_back({'R',{}});
+    string itos[n];
+    fore(i,0,n){
+        itos[i] = bitstring(stcost[i]);
+        trieAdd(itos[i]);
+    }
+    fore(i,0,n){
+        string res = trieMaximize(itos[i]);
+        reverse(all(res));
+        ll cmp = 0;
+        fore(k,0,SZ(res)){
+            cmp += (1ll<<k)*(res[k]-'0');
         }
-        g[u].push_back({v,cur});
-        g[v].push_back({u,cur});
+        show((stcost[i]^cmp));
     }
 }
 
 int main(){
-    FIN;
+    //FIN;
     int t = 1;
     //cin>>t;
     while(t--)solve();
