@@ -1,1 +1,1 @@
-A repo dedicated to competitive programming. It contains a plethora of problems solved by myself and several teamates over the years, a team notebook for ICPC and some other miscellaneous stuff.
+A repo dedicated to competitive programming. It contains a plethora of problems solved by myself(see Problems_jose) and several teamates over the years(see Simuladas), a team notebook for ICPC and some other miscellaneous stuff.
