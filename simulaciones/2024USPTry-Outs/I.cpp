@@ -28,15 +28,22 @@ typedef unsigned long long ull;
 //El Vasito is love, El Vasito is life
 
 void solve(){
-
+    int n,c=1;
+    cin>>n;
+    fore(i,0,n){
+        int e;
+        cin>>e;
+        if(e>1&&(e&1))c=2;
+    }
+    show(c);
 }
 
 int main(){
     FIN;
     int t = 1;
-    cin>>t;
+    //cin>>t;
     while(t--)solve();
     return 0;
 }
 
-//ESTOY SOLO YO
+//Gallardo 2: electric boogaloo

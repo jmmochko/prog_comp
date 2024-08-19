@@ -27,8 +27,20 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-void solve(){
+vector<vector<int>> D = {{0,0,0},{0,0,1},{0,1,0},{0,1,1},{1,0,0},{1,0,1},{1,1,0},{1,1,1}};
 
+void solve(){
+    double x,y,z,tx,ty,tz,r;
+    cin>>x>>y>>z;
+    cin>>tx>>ty>>tz;
+    cin>>r;
+    //desde las esquinas del cubo proyecto hasta el centro de la otra manzana y me quedo con la mitad del maximo de eso
+    fore(P,0,SZ(D)){
+        vector<double> edge = {D[P][0]*x,D[P][1]*y,D[P][2]*z};
+        //coordenadas del borde de la esfera contra el que me choco
+        double bx,by,bz;
+        bx = tx;
+    }
 }
 
 int main(){

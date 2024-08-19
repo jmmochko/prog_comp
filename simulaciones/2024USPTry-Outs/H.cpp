@@ -27,14 +27,50 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-void solve(){
+vector<pair<int,pii>> g[MAXN];
 
+ll t;
+
+int mustWait(ll x, ll y, ll T){
+    int c = T%(x+y);
+    if(c<x)return 0;
+    return (x+y)-c;
+}
+
+ll dist[MAXN];
+void dijkstra(int x){
+	memset(dist,-1,sizeof(dist));
+	priority_queue<pair<ll,int> > q;
+	dist[x]=0;q.push({0,x});
+	while(!q.empty()){
+		x=q.top().snd;ll c=-q.top().fst;q.pop();
+		if(dist[x]!=c)continue;
+		fore(i,0,g[x].size()){
+			int y=g[x][i].fst; ll c=mustWait(g[x][i].snd.first,g[x][i].second.second,dist[x]+t);
+			if(dist[y]<0||dist[x]+c<dist[y])
+				dist[y]=dist[x]+c,q.push({-dist[y],y});
+		}
+	}
+}
+
+void solve(){
+    int n,m;
+    cin>>n>>m>>t;
+    fore(i,0,m){
+        ll a,b,x,y;
+        cin>>a>>b>>x>>y;
+        --a;--b;
+        g[a].push_back({b,{x,y}});
+        g[b].push_back({a,{x,y}});
+    }
+    dijkstra(0);
+    show(dist[n-1]+t);
 }
 
 int main(){
     FIN;
     int t = 1;
-    cin>>t;
+    //cin>>t;
     while(t--)solve();
     return 0;
 }

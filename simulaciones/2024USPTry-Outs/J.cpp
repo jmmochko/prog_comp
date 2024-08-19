@@ -28,15 +28,27 @@ typedef unsigned long long ull;
 //El Vasito is love, El Vasito is life
 
 void solve(){
-
+    int n;
+    cin>>n;
+    vector<ll> nums(n);
+    input(nums);
+    sort(all(nums));
+    ll res = 0,p = 0;
+    fore(i,0,n){
+        if(nums[i]*(n-i)>=res){
+            res = nums[i]*(n-i);
+            p = nums[i];
+        }
+    }
+    cout<<p<<" "<<res<<'\n';
 }
 
 int main(){
     FIN;
     int t = 1;
-    cin>>t;
+    //cin>>t;
     while(t--)solve();
     return 0;
 }
 
-//ESTOY SOLO YO
+//Gallardo 2: electric boogaloo

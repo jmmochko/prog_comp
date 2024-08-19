@@ -27,8 +27,41 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-void solve(){
+ll fastpow(ll b, ll e){
+    if(e==0)return 1;
+    ll aux = fastpow(b,e/2);
+    if(e%2!=0)return (((aux*aux)%M)*e)%M;
+    return (aux*aux)%M;
+}
 
+void solve(){
+    int n,k;
+    cin>>n>>k;
+    vector<int> cnt(n);
+    cin>>cnt[0];
+    fore(i,1,n){
+        cin>>cnt[i];
+        cnt[i]+=cnt[i-1];
+    }
+    ll fact[n+1];
+    fact[0] = 1;
+    fore(i,1,n+1){
+        fact[i] = (fact[i-1]*i)%M;
+    }
+    ll res,zeros,ones;
+    fore(i,k-1,n){
+        ones = cnt[i];
+        zeros = i-ones+1;
+        if(k+1/2>ones)continue;
+        fore(a,k+1/2,ones+1){
+            if(zeros<k-a)continue;
+            ll choose1 = (((fact[ones]*fastpow(ones-a,M-2))%M)*fastpow(a,M-2))%M;
+            ll choose0 = (((fact[zeros]*fastpow(k-a,M-2))%M)*fastpow(zeros-(k-a),M-2))%M;
+            res += (choose0*choose1)%M;
+            res = res%M;
+        }
+    }
+    show(res);
 }
 
 int main(){
@@ -39,4 +72,4 @@ int main(){
     return 0;
 }
 
-//ESTOY SOLO YO
+//Gallardo 2: electric boogaloo
