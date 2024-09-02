@@ -1,59 +1,115 @@
 #include <bits/stdc++.h>
 #define FIN ios::sync_with_stdio(0);cin.tie(0);cout.tie(0)
 #define fore(a,b,c) for(int a=b; a<c; ++a)
-#define dfore(a,b,c) for(int a=b; a>=c; --a)
 #define all(a) a.begin(),a.end()
 #define SZ(a) (int)a.size()
 #define show(a) cout<<a<<'\n'
 #define showAll(a) for(auto b: a)cout<<b<<" ";cout<<'\n'
 #define pb push_back
-#define pii pair<int,int>
-#define input(a) for(auto& i:a) cin>>i
-#define RAYA cout<<"--------------\n";
 typedef long long ll;
 using namespace std;
 
-int N,M;
+ll n,m;
 
-bool valid(int i, int j){
-    return (i>=0 && i<N && j>=0 && j<M);
-}
+// bool ist(ll i, ll j, vector<vector<char>> & mat, vector<vector<bool>> & vis){
+//     if(j==0) return false;
+//     if(mat[i-4][j-1]!='#' || vis[i-4][j-1]) return false;
+//     if(mat[i-4][j+1]!='#' || vis[i-4][j+1]) return false;
+//     return true;
+// }
 
-bool is(vector<pii> &f, int i, int j, vector<string> &B){
-    for(auto e: f){
-        int ni = i+e.first, nj = j+e.second;
-        if((!valid(ni,nj))||B[ni][nj]!='#'){
-            return false;
-        }
-    }
+bool isa(ll i, ll j, vector<vector<char>> & mat, vector<vector<bool>> & vis){
+    if(j>=m-2) return false;
+    if(mat[i][j+2]!='#' || vis[i][j+2]) return false;
+    if(mat[i-4][j+2]!='#' || vis[i-4][j+2]) return false;
+    if(mat[i-2][j+2]!='#' || vis[i-2][j+2]) return false;
+    if(mat[i-2][j+1]!='#' || vis[i-2][j+1]) return false;
+    if(mat[i-4][j+1]!='#' || vis[i-4][j+1]) return false;
     return true;
 }
 
-void fill(vector<pii> &f, int i, int j, vector<string> &B){
-    for(auto e: f){
-        int ni = i+e.first, nj = j+e.second;
-        B[ni][nj] = 'X';
-    }
+bool isp(ll i, ll j, vector<vector<char>> & mat, vector<vector<bool>> & vis){
+    if(j>=m-2) return false;
+    if(mat[i-4][j+2]!='#' || vis[i-4][j+2]) return false;
+    if(mat[i-2][j+2]!='#' || vis[i-2][j+2]) return false;
+    if(mat[i-2][j+1]!='#' || vis[i-2][j+1]) return false;
+    if(mat[i-4][j+1]!='#' || vis[i-2][j+1]) return false;
+    return true;
 }
 
+void vist(ll i,ll j, vector<vector<bool>> & vis){
+    vis[i][j] = true;
+    vis[i-1][j] = true;
+    vis[i-2][j] = true;
+    vis[i-3][j] = true;
+    vis[i-4][j] = true;
+    vis[i-4][j-1] = true;
+    vis[i-4][j] = true;
+    vis[i-4][j+1] = true;
+    return;
+}
+void visa(ll i,ll j, vector<vector<bool>> & vis){
+    vis[i][j] = true;
+    vis[i-1][j] = true;
+    vis[i-2][j] = true;
+    vis[i-3][j] = true;
+    vis[i-4][j] = true;
+    vis[i][j+2] = true;
+    vis[i-1][j+2] = true;
+    vis[i-2][j+2] = true;
+    vis[i-3][j+2] = true;
+    vis[i-4][j+2] = true;
+    vis[i-2][j+1] = true;
+    vis[i-4][j+1] = true;
+    return;
+
+}
+
+void visp(ll i,ll j, vector<vector<bool>> & vis){
+    vis[i][j] = true;
+    vis[i-1][j] = true;
+    vis[i-2][j] = true;
+    vis[i-3][j] = true;
+    vis[i-4][j] = true;
+    vis[i-2][j+2] = true;
+    vis[i-3][j+2] = true;
+    vis[i-4][j+2] = true;
+    vis[i-2][j+1] = true;
+    vis[i-4][j+1] = true;
+    return;
+}
+
+
 int main(){
-    FIN;
-    cin>>N>>M;
-    vector<string> B(N);
-    input(B);
-    vector<int> res(3,0);
-    vector<pii> T = {{0,0},{-1,0},{-2,0},{-3,0},{-4,0},{-4,1},{-4,-1}};
-    vector<pii> A = {{0,0},{-1,0},{-2,0},{-3,0},{-4,0},{0,-2},{-1,-2},{-2,-2},{-3,-2},{-4,-2},{-4,-1},{-2,-1}};
-    vector<pii> P = {{0,0},{-1,0},{-2,0},{-3,0},{-4,0},{-4,1},{-4,2},{-3,2},{-2,2},{-2,1}};
-    vector<vector<pii>> TAP = {A,P,T};
-    dfore(i,N-1,4)dfore(j,M-1,0){
-        fore(k,0,3){
-            if(is(TAP[k],i,j,B)){
-                ++res[k];
-                fill(TAP[k],i,j,B);
+    // FIN;
+    cin >> n >> m;
+    vector<vector<char>> mat(n,vector<char>(m));
+    vector<vector<bool>> vis(n,vector<bool>(m,false));
+    ll t = 0, a = 0, p = 0;
+    fore(i,0,n) fore(j,0,m) cin >> mat[i][j];
+    for(int i = n-1; i>=0; i--){
+        fore(j,0,m){
+            if(mat[i][j] == '.'  || vis[i][j]) continue;
+            // cout << "i "  << i << " j " << j << "\n";
+            if(isa(i,j,mat,vis)){
+                // show("hay a");
+                a++;
+                visa(i,j,vis);
+            } else if(isp(i,j,mat,vis)){
+                // show("hay p");
+                p++;
+                visp(i,j,vis);
+            }
+            else{
+                // show("hay t");
+                t++;
+                vist(i,j,vis);
             }
         }
     }
-    cout<<res[2]<<" "<<res[0]<<" "<<res[1]<<'\n';
+
+    cout << t << " " << a << " " << p << "\n";
+
+
     return 0;
 }
