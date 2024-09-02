@@ -1,133 +1,67 @@
 #include <bits/stdc++.h>
 #define FIN ios::sync_with_stdio(0);cin.tie(0);cout.tie(0)
 #define fore(a,b,c) for(int a=b; a<c; ++a)
+#define dfore(a,b,c) for(int a=b; a>=c; --a)
 #define all(a) a.begin(),a.end()
 #define SZ(a) (int)a.size()
 #define show(a) cout<<a<<'\n'
 #define showAll(a) for(auto b: a)cout<<b<<" ";cout<<'\n'
 #define pb push_back
+#define pii pair<int,int>
+#define input(a) for(auto& i:a) cin>>i
+#define RAYA cout<<"--------------\n";
 typedef long long ll;
 using namespace std;
 
-bool ist(ll i, ll j, vector<vector<char>> & mat){
-    bool flag = true;
-    if(mat[i][j]!='#') flag = false;
-    if(mat[i-1][j]!='#') flag = false;
-    if(mat[i-2][j]!='#') flag = false;
-    if(mat[i-3][j]!='#') flag = false;
-    if(mat[i-4][j]!='#') flag = false;
-    if(mat[i-4][j-1]!='#') flag = false;
-    if(mat[i-4][j]!='#') flag = false;
-    if(mat[i-4][j+1]!='#') flag = false;
+int N,M;
 
-    return flag;
+bool valid(int i, int j){
+    return (i>=0 && i<N && j>=0 && j<M);
 }
 
-bool isa(ll i, ll j, vector<vector<char>> & mat){
-    bool flag = true;
-    if(mat[i][j]!='#') flag = false;
-    if(mat[i-1][j]!='#') flag = false;
-    if(mat[i-2][j]!='#') flag = false;
-    if(mat[i-3][j]!='#') flag = false;
-    if(mat[i-4][j]!='#') flag = false;
-    if(mat[i][j+2]!='#') flag = false;
-    if(mat[i-1][j+2]!='#') flag = false;
-    if(mat[i-2][j+2]!='#') flag = false;
-    if(mat[i-3][j+2]!='#') flag = false;
-    if(mat[i-4][j+2]!='#') flag = false;
-    if(mat[i-2][j+1]!='#') flag = false;
-    if(mat[i-4][j+1]!='#') flag = false;
-
-    return flag;
+bool is(vector<pii> &f, int i, int j, vector<string> &B){
+    for(auto e: f){
+        int ni = i+e.first, nj = j+e.second;
+        if((!valid(ni,nj))||B[ni][nj]!='#'){
+            return false;
+        }
+    }
+    return true;
 }
 
-bool isp(ll i, ll j, vector<vector<char>> & mat){
-    bool flag = true;
-    if(mat[i][j]!='#') flag = false;
-    if(mat[i-1][j]!='#') flag = false;
-    if(mat[i-2][j]!='#') flag = false;
-    if(mat[i-3][j]!='#') flag = false;
-    if(mat[i-4][j]!='#') flag = false;
-    if(mat[i-2][j+2]!='#') flag = false;
-    if(mat[i-3][j+2]!='#') flag = false;
-    if(mat[i-4][j+2]!='#') flag = false;
-    if(mat[i-2][j+1]!='#') flag = false;
-    if(mat[i-4][j+1]!='#') flag = false;
-    
-    return flag;
+void fill(vector<pii> &f, int i, int j, vector<string> &B){
+    for(auto e: f){
+        int ni = i+e.first, nj = j+e.second;
+        B[ni][nj] = 'X';
+    }
 }
-
-void vist(ll i,ll j, vector<vector<bool>> & vis){
-    vis[i][j] = true;
-    vis[i-1][j] = true;
-    vis[i-2][j] = true;
-    vis[i-3][j] = true;
-    vis[i-4][j] = true;
-    vis[i-4][j-1] = true;
-    vis[i-4][j] = true;
-    vis[i-4][j+1] = true;
-    return;
-}
-void visa(ll i,ll j, vector<vector<bool>> & vis){
-    vis[i][j] = true;
-    vis[i-1][j] = true;
-    vis[i-2][j] = true;
-    vis[i-3][j] = true;
-    vis[i-4][j] = true;
-    vis[i][j+2] = true;
-    vis[i-1][j+2] = true;
-    vis[i-2][j+2] = true;
-    vis[i-3][j+2] = true;
-    vis[i-4][j+2] = true;
-    vis[i-2][j+1] = true;
-    vis[i-4][j+1] = true;
-
-    return;
-
-}
-
-void visp(ll i,ll j, vector<vector<bool>> & vis){
-    vis[i][j]  = true;
-    vis[i-1][j]  = true;
-    vis[i-2][j]  = true;
-    vis[i-3][j] = true;
-    vis[i-4][j] =  true;
-    vis[i-2][j+2] = true;
-    vis[i-3][j+2] = true;
-    vis[i-4][j+2] = true;
-    vis[i-2][j+1] = true;
-    vis[i-4][j+1] = true;
-    return;
-}
-
 
 int main(){
     FIN;
-    ll n,m; cin >> n >> m;
-    vector<vector<char>> mat(n,vector<char>(m));
-    vector<vector<bool>> vis(n,vector<bool>(m,false));
-    ll t = 0, a = 0, p = 0;
-    fore(i,0,n) fore(j,0,m) cin >> mat[i][j];
-    for(int i = n-1; i>=0; i--){
-        fore(j,0,m){
-            if(mat[i][j] == '.'  || vis[i][j]) continue;
-
-            if(isa(i,j,mat)){
-                a++;
-                visa(i,j,vis);
-            } else if(isp(i,j,mat)){
-                p++;
-                visp(i,j,vis);
-            }
-            else{
-                t++;
-                vist(i,j,vis);
+    cin>>N>>M;
+    vector<string> B(N);
+    input(B);
+    vector<int> res(3,0);
+    vector<pii> T = {{0,0},{-1,0},{-2,0},{-3,0},{-4,0},{-4,1},{-4,-1}};
+    vector<pii> A = {{0,0},{-1,0},{-2,0},{-3,0},{-4,0},{0,-2},{-1,-2},{-2,-2},{-3,-2},{-4,-2},{-4,-1},{-2,-1}};
+    vector<pii> P = {{0,0},{-1,0},{-2,0},{-3,0},{-4,0},{-4,1},{-4,2},{-3,2},{-2,2},{-2,1}};
+    vector<vector<pii>> TAP = {T,A,P};
+    dfore(i,N-1,4)dfore(j,M-1,0){
+        vector<bool> son(3);
+        int cnt = 0;
+        fore(k,0,3){
+            son[k] = is(TAP[k],i,j,B);
+            if(son[k])++cnt;
+        }
+        if(cnt==1){
+            fore(k,0,3){
+                if(son[k]){
+                    ++res[k];
+                    fill(TAP[k],i,j,B);
+                }
             }
         }
     }
-
-    cout << t << " " << a << " " << p << "\n";
-
-
+    showAll(res);
     return 0;
 }
