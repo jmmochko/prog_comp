@@ -45,23 +45,15 @@ int main(){
     vector<pii> T = {{0,0},{-1,0},{-2,0},{-3,0},{-4,0},{-4,1},{-4,-1}};
     vector<pii> A = {{0,0},{-1,0},{-2,0},{-3,0},{-4,0},{0,-2},{-1,-2},{-2,-2},{-3,-2},{-4,-2},{-4,-1},{-2,-1}};
     vector<pii> P = {{0,0},{-1,0},{-2,0},{-3,0},{-4,0},{-4,1},{-4,2},{-3,2},{-2,2},{-2,1}};
-    vector<vector<pii>> TAP = {T,A,P};
+    vector<vector<pii>> TAP = {A,P,T};
     dfore(i,N-1,4)dfore(j,M-1,0){
-        vector<bool> son(3);
-        int cnt = 0;
         fore(k,0,3){
-            son[k] = is(TAP[k],i,j,B);
-            if(son[k])++cnt;
-        }
-        if(cnt==1){
-            fore(k,0,3){
-                if(son[k]){
-                    ++res[k];
-                    fill(TAP[k],i,j,B);
-                }
+            if(is(TAP[k],i,j,B)){
+                ++res[k];
+                fill(TAP[k],i,j,B);
             }
         }
     }
-    showAll(res);
+    cout<<res[2]<<" "<<res[0]<<" "<<res[1]<<'\n';
     return 0;
 }
