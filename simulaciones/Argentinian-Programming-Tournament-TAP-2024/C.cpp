@@ -11,6 +11,7 @@
 #define input(a) for(auto& i:a) cin>>i
 #define all(a) a.begin(),a.end()
 #define DGB(a) cout<<#a<<" = "<<a<<"\n"
+#define DGBP(a) cout<<#a<<" = ";a.debug();
 #define RAYA cout<<"=============="<<"\n"
 #define pii pair<int,int>
 #define pll pair<ll,ll>
@@ -51,6 +52,7 @@ struct pt {
 		return (q-p)%(*this-p)>EPS;}
 	pt rot(pt r){return pt(*this%r,*this*r);}
 	pt rot(double a){return rot(pt(sin(a),cos(a)));}
+    void debug(){cout<<x<<" "<<y<<'\n';}
 };
 int sgn2(double x){return x<0?-1:1;}
 struct ln {
@@ -128,7 +130,7 @@ int main(){
         fore(j,0,n){
             ln ld(base[j],base[(j+1)%n]);
             pt itt = check^ld;
-            if(itt.x<max(base[j].x,base[(j+1)%n].x) && itt.x>min(base[j].x,base[(j+1)%n].x)){
+            if((itt.x<max(base[j].x,base[(j+1)%n].x) && itt.x>min(base[j].x,base[(j+1)%n].x))&&(itt.x<max(base[i].x,ci.x)&&itt.x>min(base[i].x,ci.x))){
                 show("S");
                 return 0;
             }
