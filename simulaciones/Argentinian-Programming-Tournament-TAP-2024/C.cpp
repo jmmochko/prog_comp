@@ -116,8 +116,15 @@ int main(){
         show("S");
         return 0;
     }
+    pt sol(sx,sy),cus(ax,ay);
     //for each line base[i] ---> ci, check if its fully in basePol
     fore(i,0,n){
+        if(sol<cus && base[i]<sol){
+            continue;
+        }
+        if(cus<sol && sol<base[i]){
+            continue;
+        }
         //check if midpoint is inside
         pt md = (ci+base[i])/2;
         if(!basePol.has(md)){
