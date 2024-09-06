@@ -26,54 +26,60 @@ typedef long long ll;
 typedef unsigned int ui;
 typedef unsigned long long ull;
 
-const double EPS=1e-7;
-const double DINF=1e200;
+#define EPS 3.1e-10 // lower EPS for smaller numbers
+const long double DINF=1e200;
 
-struct pt {
-	double x,y;
-	pt(double x, double y):x(x),y(y){}
+struct pt {  // for 3D add z coordinate
+	long double x,y;
+	pt(long double x, long double y):x(x),y(y){}
 	pt(){}
-	double norm2(){return *this**this;}
-	double norm(){return sqrt(norm2());}
-	bool operator==(pt p){return abs(x-p.x)<EPS&&abs(y-p.y)<EPS;}
+	long double norm2(){return *this**this;}
+	long double norm(){return sqrt(norm2());}
+	bool operator==(pt p){return abs(x-p.x)<=EPS&&abs(y-p.y)<=EPS;}
 	pt operator+(pt p){return pt(x+p.x,y+p.y);}
 	pt operator-(pt p){return pt(x-p.x,y-p.y);}
-	pt operator*(double t){return pt(x*t,y*t);}
-	pt operator/(double t){return pt(x/t,y/t);}
-	double operator*(pt p){return x*p.x+y*p.y;}
-	double operator%(pt p){return x*p.y-y*p.x;}
-    double angle(pt p){ // redefine acos for values out of range
+	pt operator*(long double t){return pt(x*t,y*t);}
+	pt operator/(long double t){return pt(x/t,y/t);}
+	long double operator*(pt p){return x*p.x+y*p.y;}
+	long double angle(pt p){ // redefine acos for values out of range
 		return acos(*this*p/(norm()*p.norm()));}
 	pt unit(){return *this/norm();}
+	long double operator%(pt p){return x*p.y-y*p.x;}
 	// 2D from now on
 	bool operator<(pt p)const{ // for convex hull
 		return x<p.x-EPS||(abs(x-p.x)<=EPS&&y<p.y-EPS);}
 	bool left(pt p, pt q){ // is it to the left of directed line pq?
 		return (q-p)%(*this-p)>EPS;}
 	pt rot(pt r){return pt(*this%r,*this*r);}
-	pt rot(double a){return rot(pt(sin(a),cos(a)));}
-    void debug(){cout<<x<<" "<<y<<'\n';}
+	pt rot(long double a){return rot(pt(sin(a),cos(a)));}
 };
-int sgn2(double x){return x<0?-1:1;}
+
+int sgn2(long double x){return x<0?-1:1;}
 struct ln {
 	pt p,pq;
 	ln(pt p, pt q):p(p),pq(q-p){}
 	ln(){}
 	bool has(pt r){return dist(r)<=EPS;}
 	bool seghas(pt r){return has(r)&&(r-p)*(r-(p+pq))<=EPS;}
-//	bool operator /(ln l){return (pq.unit()^l.pq.unit()).norm()<=EPS;} // 3D
 	bool operator/(ln l){return abs(pq.unit()%l.pq.unit())<=EPS;} // 2D
 	bool operator==(ln l){return *this/l&&has(l.p);}
 	pt operator^(ln l){ // intersection
 		if(*this/l)return pt(DINF,DINF);
 		pt r=l.p+l.pq*((p-l.p)%pq/(l.pq%pq));
-        return r;
+		return r;
 	}
-	double angle(ln l){return pq.angle(l.pq);}
+	bool segcross(ln l){
+		pt itt = (*this)^l;
+		if(itt.x == DINF){
+			return (l.seghas(p)||l.seghas(pq+p)||(*this).seghas(l.p)||(*this).seghas(l.pq+l.p));
+		}
+		return (*this).seghas(itt)&&l.seghas(itt);
+	}
+	long double angle(ln l){return pq.angle(l.pq);}
 	int side(pt r){return has(r)?0:sgn2(pq%(r-p));} // 2D
 	pt proj(pt r){return p+pq*((r-p)*pq/pq.norm2());}
 	pt ref(pt r){return proj(r)*2-r;}
-	double dist(pt r){return (r-proj(r)).norm();}
+	long double dist(pt r){return (r-proj(r)).norm();}
 };
 
 
@@ -135,9 +141,9 @@ int main(){
         //check if it intersects any side of basePol
         bool res = false;
         fore(j,0,n){
+			if(j==i||(j+1)%n==i)continue;
             ln ld(base[j],base[(j+1)%n]);
-            pt itt = check^ld;
-            if((itt.x<max(base[j].x,base[(j+1)%n].x) && itt.x>min(base[j].x,base[(j+1)%n].x))&&(itt.x<max(base[i].x,ci.x)&&itt.x>min(base[i].x,ci.x))){
+            if(ld.segcross(check)){
                 show("S");
                 return 0;
             }
