@@ -14,7 +14,7 @@
 #define RAYA cout<<"=============="<<"\n"
 #define pii pair<int,int>
 #define pll pair<ll,ll>
-#define MAXN 200005
+#define MAXN 1000001
 #define ALPH 26
 #define M 1000000007
 #define MAXINT (1<<30)
@@ -27,45 +27,50 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-ll mod_sub(ll a, ll b){
-    ll res = a-b;
-    if(res<0)res+=M;
-    return res%M;
-}
-
-ll mod_pot(ll b, ll e){
-    if(e==0||b==1)return 1;
-    ll aux = mod_pot(b,e/2);
-    if(e&1)return ((aux*aux)%M*b)%M;
-    return (aux*aux)%M;
+int uf[MAXN];
+void uf_init(){memset(uf,-1,sizeof(uf));}
+int uf_find(int x){return uf[x]<0?x:uf[x]=uf_find(uf[x]);}
+bool uf_join(int x, int y){
+	x=uf_find(x);y=uf_find(y);
+	if(x==y)return false;
+	if(uf[x]>uf[y])swap(x,y);
+	uf[x]+=uf[y];uf[y]=x;
+	return true;
 }
 
 void solve(){
-    ll n;
-    cin>>n;
-    vector<ll> nums(n);
-    input(nums);
-    ll tot = 0;
-    fore(i,0,n)tot=(tot+nums[i])%M;
-    tot = tot%M;
-    ll p = 0;
+    int n,m;
+    cin>>n>>m;
+    vector<string> b(n);
+    input(b);
+    uf_init();
     fore(i,0,n){
-        p += (mod_sub(tot,nums[i])*nums[i])%M;
-        p = p%M;
-        tot = mod_sub(tot,nums[i]);
+        fore(j,0,m){
+            if(b[i][j]=='#')continue;
+            if(i>0&&b[i-1][j]=='.'){
+                uf_join(i*m+j,(i-1)*m+j);
+            }
+            if(j>0&&b[i][j-1]=='.'){
+                uf_join(i*m+j,i*m+(j-1));
+            }
+        }
     }
-    ll q=(n*(n-1))%M, inv2 = mod_pot(2,M-2);
-    q = (q*inv2)%M;
-    q = mod_pot(q,M-2);
-    show((p*q)%M);
+    set<int> res;
+    fore(i,0,n){
+        fore(j,0,m){
+            if(b[i][j]=='#')continue;
+            res.insert(uf_find(i*m+j));
+        }
+    }
+    show(SZ(res));
 }
 
 int main(){
     FIN;
     int t = 1;
-    cin>>t;
+    //cin>>t;
     while(t--)solve();
     return 0;
 }
 
-//ESTOY SOLO YO
+//Sale regional?
