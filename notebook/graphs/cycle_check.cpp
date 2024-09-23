@@ -58,7 +58,6 @@ vector<int> find_cycle(int gstart, int gend){
     if(cs == -1)return res;
     res.push_back(ce);
     for(int v = cs; v != ce; v = p[v]){
-        //DGB(v);
         res.push_back(v);
     }
     res.push_back(ce);
