@@ -66,9 +66,9 @@ int main(){
     }
     // chequear el valor del polinomio en 2
     reverse(all(aux));
-    ll acc = 0;
+    ll acc = aux[0];
     ll pot = 1;
-    fore(i,0,SZ(aux)){
+    fore(i,1,SZ(aux)){
         acc +=  2*pot*aux[i];
         pot = 2*pot;
     }
