@@ -27,55 +27,21 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-#define oper(a,b) min(a,b)
-#define NEUT MAXll //Operation 
-#define LNEUT 0 //Neutral chosen for lazy op
-struct STree { // min with range sum
-	vector<ll> st,lazy;int n;
-	STree(int n): st(4*n+5,NEUT), lazy(4*n+5,LNEUT), n(n) {}
-	void init(int k, int s, int e, ll *a){
-		lazy[k]=LNEUT;  // lazy neutral element
-		if(s+1==e){st[k]=a[s];return;}
-		int m=(s+e)/2;
-		init(2*k,s,m,a);init(2*k+1,m,e,a);
-		st[k]=oper(st[2*k],st[2*k+1]); // operation
-	}
-	void push(int k, int s, int e){
-		if(lazy[k]==LNEUT)return; // if neutral, nothing to do
-		st[k]+=lazy[k]; // update st according to lazy
-		if(s+1<e){ // propagate to children
-			lazy[2*k]+=lazy[k];
-			lazy[2*k+1]+=lazy[k];
-		}
-		lazy[k]=LNEUT; // clear node lazy
-	}
-	void upd(int k, int s, int e, int a, int b, ll v){
-		push(k,s,e);
-		if(s>=b||e<=a)return;
-		if(s>=a&&e<=b){
-			lazy[k]+=v; // accumulate lazy
-			push(k,s,e);return;
-		}
-		int m=(s+e)/2;
-		upd(2*k,s,m,a,b,v);upd(2*k+1,m,e,a,b,v);
-		st[k]=oper(st[2*k],st[2*k+1]); // operation
-	}
-	ll query(int k, int s, int e, int a, int b){
-		if(s>=b||e<=a)return NEUT; // operation neutral
-		push(k,s,e);
-		if(s>=a&&e<=b)return st[k];
-		int m=(s+e)/2;
-		return oper(query(2*k,s,m,a,b),query(2*k+1,m,e,a,b)); // operation
-	}
-	void init(ll *a){init(1,0,n,a);}
-	void upd(int a, int b, ll v){upd(1,0,n,a,b,v);}
-	ll query(int a, int b){return query(1,0,n,a,b);}
-}; // usage: STree rmq(n);rmq.init(x);rmq.upd(s,e,v);rmq.query(s,e);
+void calc_pmin(vector<pair<pll,int>> &nums, vector<ll> &pmin, ll acc){
+    ll prev = MAXll;
+    fore(i,0,SZ(nums)){
+        if(nums[i].second!=-1){
+            acc += nums[i].first.second;
+            prev = min(prev,nums[i].first.first-acc);
+        }
+        pmin[i] = prev;
+    }
+}
 
 void solve(){
     int n;
     cin>>n;
-    vector<pair<pll,int>> nums(n);//<<D,T>,i>
+    vector<pair<pll,int>> nums(n);//<<Deadline,Time>,i>
     fore(i,0,n){
         cin>>nums[i].first.second>>nums[i].first.first;
         nums[i].second = i;
@@ -83,9 +49,8 @@ void solve(){
     sort(all(nums));
     //check if possible
     ll acc = 0;
-    vector<int> pos(n), t(n);
+    vector<int> pos(n);
     fore(i,0,n){
-        t[i] = acc;
         acc += nums[i].first.second;
         if(acc>nums[i].first.first){
             show('*');
@@ -93,26 +58,28 @@ void solve(){
         }
         pos[nums[i].second] = i;
     }
-    //lazy st <tiempo de sobra al llegar a pos i>
-    ll to_st[n];
-    fore(i,0,n){
-        to_st[i] = nums[i].first.first - (t[i] + nums[i].first.second);
-    }
-    STree st(n);
-    st.init(to_st);
-    vector<int> res(n);
-    set<int> to_place;
-    fore(i,0,n)to_place.insert(i);
-    fore(placed,0,n){
-        for(auto i: to_place){
-            if(st.query(0,pos[i])<nums[i].first.second){
-                continue;
+    //start placing
+    vector<int> res;
+    vector<ll> pmin(n);
+    acc = 0;
+    fore(_,0,n){
+        calc_pmin(nums,pmin,acc);
+        fore(j,0,n){
+            int i = pos[j];
+            if(nums[i].second==-1)continue;
+            if(i==0){
+                res.push_back(j+1);
+                acc += nums[i].first.second;
+                nums[i].second = -1;
+                break;
             }
-            st.upd(0,pos[i],-nums[i].first.second);
-            st.upd(pos[i],pos[i]+1,MAXll);
-            res[placed] = i+1;
-            to_place.erase(i);
-            break;
+            ll cutoff = pmin[i-1];
+            if(cutoff-nums[i].first.second>=0){
+                res.push_back(j+1);
+                acc += nums[i].first.second;
+                nums[i].second = -1;
+                break;
+            }
         }
     }
     showAll(res);
