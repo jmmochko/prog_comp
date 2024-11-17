@@ -28,15 +28,21 @@ typedef unsigned long long ull;
 //El Vasito is love, El Vasito is life
 
 void solve(){
-
+    string s;
+    cin>>s;
+    set<char> l;
+    fore(i,0,SZ(s)){
+        l.insert(s[i]);
+    }
+    show(SZ(s)-SZ(l));
 }
 
 int main(){
     FIN;
     int t = 1;
-    cin>>t;
+    //cin>>t;
     while(t--)solve();
     return 0;
 }
 
-//El año que viene soy GOD
+//Sale regional?

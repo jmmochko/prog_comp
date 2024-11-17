@@ -6,7 +6,7 @@
 #define SZ(a) ((int)a.size())
 #define fst first
 #define snd second
-#define show(a) cout<<a<<"\n"
+#define show(a) cout<<a
 #define showAll(a) for(auto i:a) cout<<i<<" ";cout<<"\n"
 #define input(a) for(auto& i:a) cin>>i
 #define all(a) a.begin(),a.end()
@@ -28,15 +28,44 @@ typedef unsigned long long ull;
 //El Vasito is love, El Vasito is life
 
 void solve(){
-
+    int k,n;
+    cin>>k>>n;
+    int cnt = 1;
+    if(k<=(n-1)/3 || k>(n+1)/2){
+        show("*\n");
+        return;
+    }
+    fore(i,0,n){
+        if(cnt==2){
+            show("X");
+            cnt = 0;
+            --k;
+        }
+        else if(cnt==1){
+            if(k>=((n-i)/2)+1){
+                show("X");
+                cnt = 0;
+                --k;
+            }
+            else{
+                show("-");
+                ++cnt;
+            }
+        }
+        else{
+            show("-");
+            ++cnt;
+        }
+    }
+    cout<<'\n';
 }
 
 int main(){
     FIN;
     int t = 1;
-    cin>>t;
+    //cin>>t;
     while(t--)solve();
     return 0;
 }
 
-//El año que viene soy GOD
+//Sale regional?

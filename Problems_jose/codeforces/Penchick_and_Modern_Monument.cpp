@@ -28,7 +28,19 @@ typedef unsigned long long ull;
 //El Vasito is love, El Vasito is life
 
 void solve(){
-
+    multiset<int> nums;
+    int n;
+    cin>>n;
+    fore(i,0,n){
+        int e;
+        cin>>e;
+        nums.insert(e);
+    }
+    int res = MAXN;
+    for(auto e: nums){
+        res = min(res,n-(int)nums.count(e));
+    }
+    show(res);
 }
 
 int main(){
@@ -39,4 +51,4 @@ int main(){
     return 0;
 }
 
-//El año que viene soy GOD
+//Sale regional?

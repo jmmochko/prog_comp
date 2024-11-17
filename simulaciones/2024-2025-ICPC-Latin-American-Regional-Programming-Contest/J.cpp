@@ -24,19 +24,39 @@ using namespace std;
 typedef long long ll;
 typedef unsigned int ui;
 typedef unsigned long long ull;
+typedef double ld;
 
 //El Vasito is love, El Vasito is life
 
-void solve(){
+ld get_rad(ld ang){
+    return (2.000*PI*ang)/360.00000;
+}
 
+ld get_l(ld h, ld ang){
+    ld res = sin(get_rad(90.00000 - ang))/sin(get_rad(ang));
+    return res*h;
 }
 
 int main(){
     FIN;
-    int t = 1;
-    cin>>t;
-    while(t--)solve();
+    ld ang;
+    int n;
+    cin>>ang>>n;
+    vector<pair<ll,ll>> nums(n);
+    fore(i,0,n){
+        cin>>nums[i].first>>nums[i].second;
+    }
+    sort(all(nums));
+    vector<pair<ld,ld>> sl(n);//<empieza, termina>
+    fore(i,0,n){
+        sl[i] = {nums[i].first,nums[i].first + get_l(nums[i].second,ang)};
+    }
+    ld res = sl[0].second - sl[0].first, prev = sl[0].second;
+    fore(i,1,n){
+        res += max(0.00000,sl[i].second - max(prev,sl[i].first));
+        prev = max(prev,sl[i].second);
+    }
+    show(res);
     return 0;
 }
-
-//El año que viene soy GOD
+//Sale regional?
