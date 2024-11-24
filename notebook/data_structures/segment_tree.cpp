@@ -18,7 +18,7 @@
 #define ALPH 26
 #define M 1000000007
 #define MAXINT (1<<30)
-#define MAXll (1<<60)
+#define MAXll (1ll<<60)
 #define PI 3.141592653
 using namespace std;
 typedef long long ll;
