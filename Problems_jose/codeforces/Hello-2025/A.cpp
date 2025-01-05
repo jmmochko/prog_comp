@@ -28,7 +28,9 @@ typedef unsigned long long ull;
 //El Vasito is love, El Vasito is life
 
 void solve(){
-
+    ll n,m;
+    cin>>n>>m;
+    show(max(n,m)+1ll);
 }
 
 int main(){

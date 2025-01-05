@@ -28,15 +28,17 @@ typedef unsigned long long ull;
 //El Vasito is love, El Vasito is life
 
 void solve(){
-
+    int c;
+    cin>>c;
+    
 }
 
 int main(){
     FIN;
     int t = 1;
-    cin>>t;
+    //cin>>t;
     while(t--)solve();
     return 0;
 }
 
-//Cue "Eye of the Tiger"
+//El año que viene soy GOD

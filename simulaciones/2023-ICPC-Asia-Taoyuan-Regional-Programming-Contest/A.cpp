@@ -28,7 +28,33 @@ typedef unsigned long long ull;
 //El Vasito is love, El Vasito is life
 
 void solve(){
-
+    string s;
+    cin>>s;
+    int n = SZ(s);
+    vector<int> nums;
+    for(int i = n-1; i>=0 ; i-=3){
+        string num;
+        int j = i;
+        while(j>i-3 && j>=0){
+            num.push_back(s[j]);
+            --j;
+        }
+        reverse(all(num));
+        nums.push_back(stoi(num));
+    }
+    int res = nums[0];
+    fore(i,1,SZ(nums)){
+        if(i%2==0){
+            res += nums[i];
+        }
+        else{
+            res -= nums[i];
+        }
+    }
+    res = abs(res);
+    cout<<res<<" ";
+    if(res%13==0)cout<<"YES\n";
+    else cout<<"NO\n";
 }
 
 int main(){
@@ -39,4 +65,4 @@ int main(){
     return 0;
 }
 
-//Cue "Eye of the Tiger"
+//LEOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO

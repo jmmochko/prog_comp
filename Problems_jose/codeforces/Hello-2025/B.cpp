@@ -28,7 +28,27 @@ typedef unsigned long long ull;
 //El Vasito is love, El Vasito is life
 
 void solve(){
-
+    int n,k;
+    cin>>n>>k;
+    map<int,int> occs;
+    fore(i,0,n){
+        int e;
+        cin>>e;
+        occs[e]++;
+    }
+    vector<int> nums;
+    for(auto e: occs){
+        nums.push_back(e.second);
+    }
+    sort(all(nums));
+    int res = SZ(nums);
+    fore(i,0,SZ(nums)-1){
+        if(k>=nums[i]){
+            k-=nums[i];
+            --res;
+        }
+    }
+    show(res);
 }
 
 int main(){

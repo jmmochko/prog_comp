@@ -27,8 +27,49 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-void solve(){
+ll gcd(ll a, ll b){return a?gcd(b%a,a):b;}
 
+void solve(){
+    string sb;
+    ll a,b,la,lb;
+    cin>>la>>lb>>a>>sb;
+    b = stoi(sb);
+    pll x,y;//(n,d)
+    x.fst = a;
+    ll cmp = 1;
+    fore(k,0,la){
+        cmp*=10;
+    }
+    x.snd = cmp;
+
+    ll lb10 = 1;
+    fore(k,0,lb){
+        lb10*=10;
+    }
+
+    int kk = 0;
+    ll kkcmp = 1;
+    while(kk<SZ(sb) && sb[kk] == '0'){
+        kkcmp*=10;
+        ++kk;
+    }
+
+    ll nb = b*lb10;
+
+    b = nb;
+    
+    y.fst = b;
+    y.snd = (lb10 - 1)*(cmp*10);
+
+    ll den = y.snd * x.snd,num = (x.fst*y.snd) + (y.fst*x.snd);
+
+    while(gcd(num,den)>1){
+        ll coso = gcd(num,den);
+        den/=coso;
+        num/=coso;
+    }
+
+    cout<<num<<" "<<den<<'\n';
 }
 
 int main(){
@@ -39,4 +80,4 @@ int main(){
     return 0;
 }
 
-//Cue "Eye of the Tiger"
+//LEOOOOOOOOOOOOOOOOOOOOOOOOOOOOO

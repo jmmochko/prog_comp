@@ -28,7 +28,25 @@ typedef unsigned long long ull;
 //El Vasito is love, El Vasito is life
 
 void solve(){
-
+    int n;
+    cin>>n;
+    vector<pair<pll,int>> nums(n);
+    fore(i,0,n){
+        cin>>nums[i].fst.fst>>nums[i].fst.snd;//<d,p>
+        nums[i].snd = i+1;
+    }
+    fore(i,1,n){
+        ll xd=nums[i].fst.fst,xp=nums[i].fst.snd;
+        while(i>0){
+            ll yd=nums[i-1].fst.fst,yp=nums[i-1].fst.snd;
+            if((yd * yp) + ((yd+xd)*xp) <= (xd * xp) + ((xd+yd)*yp))break;
+            swap(nums[i],nums[i-1]);
+            --i;
+        }
+    }
+    fore(i,0,n){
+        cout<<nums[i].snd<<" ";
+    }cout<<'\n';
 }
 
 int main(){
@@ -39,4 +57,9 @@ int main(){
     return 0;
 }
 
-//Cue "Eye of the Tiger"
+//LEOOOOOOOOOOOOOOOOOOOOOOOOO
+
+//  ---xy---- --> (y.d * y.p) + ((y.d+x.d)*x.p) < (x.d * x.p) + ((x.d+y.d)*y.p)
+// 2 2 <--> 5 5
+// 4 + 35
+// 25 + 14
