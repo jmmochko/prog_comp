@@ -27,26 +27,24 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-ll gcd(ll a, ll b){return a?gcd(b%a,a):b;}
+int calc_fib(vector<int> &nums){
+    int res = 0;
+    fore(i,2,5){
+        if(nums[i]==nums[i-1]+nums[i-2])++res;
+    }
+    return res;
+}
 
 void solve(){
-    ll l,r,g;
-    cin>>l>>r>>g;
-    ll left = (l/g) + (bool)(l%g);
-    ll right = (r/g);
-    int i = 0;
-    bool flag = true;
-    while(flag){
-        fore(k,0,i+1){
-            if(gcd(left+k,right-(i-k))==1){
-                if(right-(i-k)<left)cout<<-1<<" "<<-1<<'\n';
-                else cout<<(left+k)*g<<" "<<(right-(i-k))*g<<'\n';
-                flag = false;
-                break;
-            }
-        }
-        ++i;
-    }
+    vector<int> nums(5);
+    cin>>nums[0]>>nums[1]>>nums[3]>>nums[4];
+    nums[2] = nums[0] + nums[1];
+    int res = calc_fib(nums);
+    nums[2] = nums[3] - nums[1];
+    res = max(res,calc_fib(nums));
+    nums[2] = nums[4] - nums[3];
+    res = max(res,calc_fib(nums));
+    show(res);
 }
 
 int main(){

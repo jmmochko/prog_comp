@@ -27,26 +27,31 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-ll gcd(ll a, ll b){return a?gcd(b%a,a):b;}
-
 void solve(){
-    ll l,r,g;
-    cin>>l>>r>>g;
-    ll left = (l/g) + (bool)(l%g);
-    ll right = (r/g);
-    int i = 0;
-    bool flag = true;
-    while(flag){
-        fore(k,0,i+1){
-            if(gcd(left+k,right-(i-k))==1){
-                if(right-(i-k)<left)cout<<-1<<" "<<-1<<'\n';
-                else cout<<(left+k)*g<<" "<<(right-(i-k))*g<<'\n';
-                flag = false;
-                break;
+    int n;
+    cin>>n;
+    vector<ll> nums(n);
+    input(nums);
+    if(nums[1]<nums[0]){
+        show("NO");
+        return;
+    }
+    nums[1] -= nums[0];
+    nums[0] = 0;
+    fore(i,2,n){
+        if(nums[i]<nums[i-1]){
+            show("NO");
+            return;
+        }
+        else{
+            if(nums[i-2]==0){
+                nums[i] -= nums[i-1];
+                nums[i-1] = 0;
             }
         }
-        ++i;
     }
+    show("YES");
+    return;
 }
 
 int main(){
