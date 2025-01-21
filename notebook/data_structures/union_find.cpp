@@ -14,7 +14,7 @@
 #define RAYA cout<<"=============="<<"\n"
 #define pii pair<int,int>
 #define pll pair<ll,ll>
-#define MAXN 200005
+#define MAXN 200003
 #define ALPH 26
 #define M 1000000007
 #define MAXINT (1<<30)
@@ -27,24 +27,28 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-map<ll,ll> dp[21];//[k][num]
-
-ll f(ll k, ll num){
-    
-}
-
-void solve(){
-    ll k,n;
-    cin>>k>>n;
-
-}
+struct UF{
+    vector<int> uf;int sz;
+    UF(int n): uf(n,-1), sz(n) {}
+    int find(int x){return uf[x]<0?x:uf[x]=find(uf[x]);};
+    bool join(int x, int y){
+	    x=find(x);y=find(y);
+	    if(x==y)return false;
+	    if(uf[x]>uf[y])swap(x,y);
+	    uf[x]+=uf[y];uf[y]=x;
+	    return true;
+    };
+};
 
 int main(){
     FIN;
-    int t = 1;
-    cin>>t;
-    while(t--)solve();
+    UF a(4);
+    a.join(1,2);
+    assert(a.find(1)==a.find(2));
+    assert(a.find(0)!=a.find(2));
+    assert(a.find(3)!=a.find(2));
+    assert(a.find(0)!=a.find(3));
+    a.join(0,2);
+    assert(a.find(0)==a.find(2));
     return 0;
 }
-
-//Cue "Eye of the Tiger"
