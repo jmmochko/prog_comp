@@ -25,16 +25,29 @@ int main(){
         vector<ll> a(n);
         input(a);
         sort(ALL(a));
-        if(a[0]==1 && a[n-1]!=1) show("Bobius");
-        else show("Alicius");
+
+        if(a[0]==1){
+            ll count = 1;
+            ll n_aux = n;
+            fore(i,0,n-1){
+                if(a[i] + 1 == a[i+1]){
+                count++;
+                }
+                else if(a[i] != a[i+1]) break;
+                else n_aux--;
+            }
+            if(count%2 == 0 && count-n_aux!=0){
+                show("Alicius"); // 1 2 x ..... y
+            } else if (count % 2 == 0){
+                show("Bobius"); // 1 2
+            } else if(count - n_aux != 0){
+                show("Bobius"); // 1 2 3 x .... y 
+            } else{
+                show("Alicius"); // 1 2 3
+            }
+
+        } else{
+            show("Alicius");
+        }
     }
-
 }
-
-
-//La manera mas optima de jugar es obligar al enemigo a sacar 1 siempre
-//    - Si la proxima torre mas baja tiene altura h, saco h-1 piedras entonces el enemigo tiene que sacar 1
-//    - Si la primera torre mas baja tiene largo 1 entonces el otro va a hacer lo mismo
-//    - Si todas las torres tienen largo 1 entonces gano igual
-
-// 0 2 3 4
