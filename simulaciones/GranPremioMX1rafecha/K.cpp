@@ -14,7 +14,7 @@
 #define RAYA cout<<"=============="<<"\n"
 #define pii pair<int,int>
 #define pll pair<ll,ll>
-#define MAXN 200005
+#define MAXN (25*25)+1
 #define ALPH 26
 #define M 1000000007
 #define MAXINT (1<<30)
@@ -27,47 +27,46 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-int N,K;
+vector<int> g[MAXN]; // [0,n)->[0,m)
+int n,m,K;
+int mat[MAXN];bool vis[MAXN];
+int match(int x){
+	if(vis[x])return 0;
+	vis[x]=true;
+	for(int y:g[x])if(mat[y]<0||match(mat[y])){mat[y]=x;return 1;}
+	return 0;
+}
+vector<pair<int,int> > max_matching(){
+	vector<pair<int,int> > r;
+	memset(mat,-1,sizeof(mat));
+	fore(i,0,n)memset(vis,false,sizeof(vis)),match(i);
+	fore(i,0,m)if(mat[i]>=0)r.pb({mat[i],i});
+	return r;
+}
+vector<pii> D = {{1,2},{-1,-2},{-1,2},{1,-2},{2,1},{-2,-1},{2,-1},{-2,1}};
 
-vector<pii> D = {{1,2},{-1,-2},{-1,2},{1,-2}};
-
-int brute(int n, int k, vector<int> *mat){
-    vector<set<int>> ks(k*k);
-    fore(i,0,n)fore(j,0,n){
+int solve(int nn, int k, vector<int> *mat){
+    set<int> seen;
+    fore(i,0,nn)fore(j,0,nn){
         if(mat[i][j]==-1)continue;
         for(auto d: D){
             int ni = i + d.fst, nj = j + d.snd;
-            if(ni<0 || ni>=n || nj<0 || nj>=n || mat[ni][nj]==-1)continue;
-            ks[mat[i][j]].insert(mat[ni][nj]);
-            ks[mat[ni][nj]].insert(mat[i][j]);
-            int nii = i + d.snd, njj = j + d.fst;
-            if(nii<0 || nii>=n || njj<0 || njj>=n || mat[nii][njj]==-1)continue;
-            ks[mat[i][j]].insert(mat[nii][njj]);
-            ks[mat[nii][njj]].insert(mat[i][j]);
+            if(ni<0 || ni>=nn || nj<0 || nj>=nn || mat[ni][nj]==-1 || seen.count(mat[ni][nj]))continue;
+            g[mat[i][j]].push_back(mat[ni][nj]);
+            g[mat[ni][nj]].push_back(mat[i][j]);
+            seen.insert(mat[i][j]);
         }
     }
-    int res = 0;
-    while(true){
-        int mx = 0, mxpos = 0;
-        fore(i,0,SZ(ks)){
-            if(SZ(ks[i])>mx){
-                mx = SZ(ks[i]);
-                mxpos = i;
-            }
-        }
-        if(mx == 0)break;
-        ++res;
-        for(auto e: ks[mxpos]){
-            ks[e].erase(mxpos);
-        }
-        ks[mxpos].clear();
-    }
-    return res;
+    vector<pii> mtch = max_matching();
+    return SZ(mtch)/2;
 }
 
 int main(){
     FIN;
-    cin>>N>>K;
+    cin>>n>>K;
+    n = K;
+    m = K;
+    int N = n;
     vector<int> mat[N];
     fore(i,0,N)fore(j,0,N)mat[i].pb(-1);
     int cnt = 0;
@@ -78,7 +77,7 @@ int main(){
         mat[a][b] = cnt;
         ++cnt;
     }
-    show(brute(N,K,mat));
+    show(solve(N,K,mat));
     return 0;
 }
 
