@@ -14,11 +14,11 @@
 #define RAYA cout<<"=============="<<"\n"
 #define pii pair<int,int>
 #define pll pair<ll,ll>
-#define MAXN 200005
+#define MAXN 101
 #define ALPH 26
 #define M 1000000007
 #define MAXINT (1<<30)
-#define MAXll (1ll<<60)
+#define MAXll (1ll<<61)
 #define PI 3.141592653
 using namespace std;
 typedef long long ll;
@@ -27,121 +27,104 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-pll nxt(vector<pll> &nums, ll a, ll b, ll dir){
-    if(dir == 0){//derecha
-        ll na = MAXll;
-        fore(i,0,SZ(nums)){
-            if(nums[i].snd!=b || nums[i].fst<a)continue;
-            if(nums[i].fst<na)na = nums[i].fst;
-        }
-        return {na,b};
-    }
-    if(dir == 1){//arriba
-        ll nb = MAXll;
-        fore(i,0,SZ(nums)){
-            if(nums[i].fst!=a || nums[i].snd<b)continue;
-            if(nums[i].snd<nb)nb = nums[i].snd;
-        }
-        return {a,nb};
-    }
-    if(dir == 2){//izq
-        ll na = -MAXll;
-        fore(i,0,SZ(nums)){
-            if(nums[i].snd!=b || nums[i].fst>a)continue;
-            if(nums[i].fst>na)na = nums[i].fst;
-        }
-        return {na,b};
-    }
-    ll nb = -MAXll;
-    fore(i,0,SZ(nums)){
-        if(nums[i].fst!=a || nums[i].snd>b)continue;
-        if(nums[i].snd>nb)nb = nums[i].snd;
-    }
-    return {a,nb};
-}
+map<pair<pll,ll>,pair<pair<pll,ll>,ll>> g;
+map<pair<pll,ll>,bool> vis;
+map<pair<pll,ll>,ll> dp; //tamaño del ciclo que arranca acá
+pair<pll,ll> arrancaciclo = {{-1,-1},-1};
 
-ll cycle(vector<pll> &nums, ll a, ll b, ll dir, pll start){
-    ll res = 0;
-    pll nx = nxt(nums,a,b,dir);
-    DGB(nx.fst);DGB(nx.snd);
-    while(nx!=start){
-        res += abs(a-nx.fst) + abs(b-nx.snd) - 1;
-        if(dir==0){
-            a = nx.fst - 1;
-        }
-        if(dir==1){
-            b = nx.snd - 1;
-        }
-        if(dir==2){
-            a = nx.fst + 1;
-        }
-        if(dir==3){
-            b = nx.snd + 1;
-        }
-        dir = (dir+1)%4;
-        nx = nxt(nums,a,b,dir);
-        }
+ll f(pair<pll,ll> actual){
+    if(abs(actual.fst.fst)>=MAXll-1000)return MAXll;
+    if(vis[actual]){arrancaciclo = actual;return 0;}
+    vis[actual] = true;
+    pair<pair<pll,ll>,ll> nxt = g[actual];
+    ll res = nxt.snd + f(nxt.fst);
+    dp[actual] = res;
     return res;
 }
 
-void solve(){
+int main(){
+    FIN;
     while(true){
-        ll n;
+        //tomar el input
+        int n;
         cin>>n;if(n==0)break;
         ll a,b,d;
         cin>>a>>b>>d;
-        vector<pll> nums(n);
+        g.clear();
+        dp.clear();
+        vector<pll> obs(n);
         fore(i,0,n){
-            cin>>nums[i].fst>>nums[i].snd;
+            cin>>obs[i].fst>>obs[i].snd;
         }
-        set<pll> vis;
-        ll dir = 0;
-        while(d){
-            pll nx = nxt(nums,a,b,dir);
-            ll nd = abs(a-nx.fst) + abs(b-nx.snd)-1;
-            if(d<=nd){
-                if(dir==0){
-                    cout<<a+d<<" "<<b<<'\n';
+        //armar grafo en forma de map[<posicion,direccion>] -> <<posicion,direccion>, costo>
+        fore(i,0,MAXN)fore(j,0,MAXN){
+            pll actual = {i,j};
+            //derecha
+            pll mejor = {MAXll,MAXll};
+            fore(k,0,n){
+                if(obs[k].snd==actual.snd && obs[k].fst>actual.fst && obs[k].fst<mejor.fst){
+                    mejor = obs[k];
                 }
-                if(dir==1){
-                    cout<<a<<" "<<b+d<<'\n';
+            }
+            mejor.fst--;
+            g[{actual,0}] = {{mejor,1},abs(actual.fst-mejor.fst)};
+            //arriba
+            mejor = {MAXll,MAXll};
+            fore(k,0,n){
+                if(obs[k].fst==actual.fst && obs[k].snd>actual.snd && obs[k].snd<mejor.snd){
+                    mejor = obs[k];
                 }
-                if(dir==2){
-                    cout<<a-d<<" "<<b<<'\n';
+            }
+            mejor.snd--;
+            g[{actual,1}] = {{mejor,2},abs(actual.snd-mejor.snd)};
+            //izq
+            mejor = {-MAXll,-MAXll};
+            fore(k,0,n){
+                if(obs[k].snd==actual.snd && obs[k].fst<actual.fst && obs[k].fst>mejor.fst){
+                    mejor = obs[k];
                 }
-                if(dir==3){
-                    cout<<a<<" "<<b-d<<'\n';
+            }
+            mejor.fst++;
+            g[{actual,2}] = {{mejor,3},abs(actual.fst-mejor.fst)};
+            //abajo
+            mejor = {-MAXll,-MAXll};
+            fore(k,0,n){
+                if(obs[k].fst==actual.fst && obs[k].snd<actual.snd && obs[k].snd>mejor.snd){
+                    mejor = obs[k];
+                }
+            }
+            mejor.snd++;
+            g[{actual,3}] = {{mejor,0},abs(actual.snd-mejor.snd)};
+            fore(dd,0,4)vis[{actual,dd}] = false;
+        }
+        //precalculo de si hay un ciclo
+        f({{a,b},0});
+        //recorro hasta encontrar el ciclo o salirme
+        pair<pll,ll> actual = {{a,b},0};
+        while(d>0){
+            if(actual==arrancaciclo)d = d%dp[arrancaciclo];
+            pair<pair<pll,ll>,ll> nxt = g[actual];
+            ll nd = d - nxt.snd;
+            if(nd<=0){
+                if(actual.snd == 0){
+                    actual.fst.fst = actual.fst.fst + d;
+                }
+                if(actual.snd == 1){
+                    actual.fst.snd = actual.fst.snd + d;
+                }
+                if(actual.snd == 2){
+                    actual.fst.fst = actual.fst.fst - d;
+                }
+                if(actual.snd == 3){
+                    actual.fst.snd = actual.fst.snd - d;
                 }
                 break;
             }
-            if(dir==0){
-                a = nx.fst - 1;
-            }
-            if(dir==1){
-                b = nx.snd - 1;
-            }
-            if(dir==2){
-                a = nx.fst + 1;
-            }
-            if(dir==3){
-                b = nx.snd + 1;
-            }
-            dir = (dir+1)%4;
-            d -= nd;
-            if(vis.count(nx)){
-                ll clen = cycle(nums,a,b,dir,{a,b});
-                d = d%clen;
-            }
-            vis.insert(nx);
+            d = nd;
+            actual = nxt.fst;
         }
+        cout<<actual.fst.fst<<" "<<actual.fst.snd<<'\n';
     }
-}
-
-int main(){
-    //FIN;
-    int t = 1;
-    //cin>>t;
-    while(t--)solve();
     return 0;
 }
 
