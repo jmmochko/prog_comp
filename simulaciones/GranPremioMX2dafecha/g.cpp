@@ -27,12 +27,12 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-int dp[MAXN];//peso del subarbol acá
+ll dp[MAXN];//peso del subarbol acá
 bool vis[MAXN];
 vector<int> g[MAXN];
 
-int f(int u){
-    int res = 1;
+ll f(int u){
+    ll res = 1;
     vis[u] = true;
     for(auto e: g[u]){
         if(!vis[e])res+=f(e);
@@ -42,22 +42,22 @@ int f(int u){
 }
 
 void solve(){
-    int n;
+    ll n;
     cin>>n;
     fore(i,0,n-1){
-        int u,v;
+        ll u,v;
         cin>>u>>v;
         --u;--v;
         g[u].push_back(v);
         g[v].push_back(u);
     }
     f(0);
-    int mx = 0;
-    int occ = 0;
+    ll mx = 0;
+    ll occ = 0;
     fore(i,0,n){
         for(auto e: g[i]){
             if(dp[e]>dp[i])continue;
-            int valor = (n-dp[e])*dp[e];
+            ll valor = (n-dp[e])*dp[e];
             if(valor==mx)++occ;
             if(valor>mx){
                 occ = 1;

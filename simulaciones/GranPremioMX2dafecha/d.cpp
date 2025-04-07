@@ -27,41 +27,41 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-// f(i,s,k) = cantidad de pares numeros validos
-// f(digito en el que estoy, quiero sumar con los que quedan del segundo, el primero tiene en esa posicion)
-// f(800,800*9,10)
+// f(i,s) = cantidad de pares numeros validos
+// f(digito en el que estoy, diferencia de la suma de digitos que llevo hasta ahora s2-s1)
+// f(800,800*9)
 
-int n;
+ll n;
 
-int dp[800][2*(791*9)][10];
+ll dp[801][800*9+2];
 
-int f(int i, int s, int k){
-    //digito que elijo poner
-    //DGB(i);DGB(s);DGB(k);RAYA;
-    if(dp[i][s][k]!=-1)return dp[i][s][k];
-    int sposta = s-(791*9);
-    if(i==n-1){
-        if(k==sposta || sposta>9 || sposta<0)return 0;
-        return 1;
+ll f(ll i, ll s){
+    if(dp[i][s]!=-1)return dp[i][s];
+    //DGB(i);DGB(n);DGB(s);DGB(sposta);RAYA;
+    dp[i][s] = 0;
+    if(i==800){
+        fore(d,0,10)fore(e,0,10)if(d!=e && e-d == s)dp[i][s]++;
+        return dp[i][s]%M;
     }
-    dp[i][s][k] = 0;
-    fore(d,0,10){//dgito que elijo poner el el segundo
-        if(d==k)continue;
-        fore(nk,0,10){//dgito que elijo poner en la prox pos del primero
-            dp[i][s][k] += f(i+1,(s-d)+nk,nk);
-            dp[i][s][k] = dp[i][s][k]%M;
+    fore(d,0,10){//dgito que elijo poner el primero
+        fore(e,0,10){//digito para el segundo
+            if(e==d)continue;
+            dp[i][s] += f(i+1,abs(s+e-d));
+            dp[i][s] = dp[i][s]%M;
         }
     }
-    dp[i][s][k];
-    return dp[i][s][k];
+    return dp[i][s];
 }
 
 void solve(){
     cin>>n;
-    int res = 0;
-    fore(i,0,n)fore(j,0,2*791*9)fore(k,0,10)dp[i][j][k] = -1;
-    fore(p,1,10)fore(k,1,10)fore(sp,0,10){//arranco desde i+1 para no poner 0s al principio
-        if(k!=p)res += f(1,(791*9)+p+sp-k,sp);
+    ll res = 0;
+    if(n==1){
+        show(0);
+        return;
+    }
+    fore(p,1,10)fore(k,1,10){//arranco desde i+1 para no poner 0s al principio
+        if(k!=p)res += f(800-(n-2),abs(k-p));
         res = res%M;
     }
     show(res);
@@ -70,6 +70,7 @@ void solve(){
 int main(){
     FIN;
     int t = 1;
+    fore(i,0,801)fore(j,0,800*9+2)dp[i][j] = -1;
     cin>>t;
     while(t--)solve();
     return 0;
