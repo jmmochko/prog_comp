@@ -35,7 +35,7 @@ int main(){
         fore(i,0,n){
             // me fijo si al prog i le puedo asignar su valor necesario
             ll counter = 0;
-            fore(j,i+1,n){
+            dfore(j,n-1,i+1){
                 if(counter == a[i].fst){ // significa que ya guarde todos los necesarios
                     break;
                 }
