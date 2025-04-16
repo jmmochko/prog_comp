@@ -27,33 +27,45 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-bool f(vector<int> &nums, int splits, int mx){
-    set<int> llevo;
-    int cnt = 0;
-    //DGB(splits);DGB(mx);
-    fore(i,0,SZ(nums)){
-        if(nums[i]<mx)if(llevo.insert(nums[i]).snd)++cnt;
-        if(cnt>=mx){
-            --splits;
-            llevo.clear();
-            cnt = 0;
+struct SearchTree{
+    vector<pair<int,vector<int>>> tree;
+    void init(){
+        tree.push_back({MAXINT,{}});
+    }
+    void add(int num){
+        int p = 0;
+        fore(i,0,31){
+            int ahora = num&(1<<30-i);
+            int nxt = SZ(tree);
+            for(auto e: tree[p].snd){
+                if(tree[e].fst==ahora)nxt = e;
+            }
+            if(nxt==SZ(tree)){
+                tree.push_back({ahora,{}});
+            }
+            tree[p].snd.pb(nxt);
+            p = nxt;
         }
     }
-    return splits<=0;
-}
+    int query(int num){//returns res such that res +
+        int p = 0;
+        int res = 0;
+        fore(i,0,31){
+            int ahora = num&(1<<30-i);
+            int nxt = tree[p].snd[0];
+            for(auto e: tree[p].snd){
+                if(tree[e].fst!=ahora)nxt = e;
+            }
+
+        }
+    }
+};
+
 
 void solve(){
     int n,k;
     cin>>n>>k;
-    vector<int> nums(n);
-    input(nums);
-    int l=0,r=n+1;
-    while(l+1<r){
-        int m = (l+r)/2;
-        if(f(nums,k,m))l=m;
-        else r=m;
-    }
-    show(l);
+
 }
 
 int main(){
