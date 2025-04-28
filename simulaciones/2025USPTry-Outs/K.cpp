@@ -27,11 +27,7 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-void solve(){
-    int n;
-    cin>>n;
-    vector<double> nums(n);
-    input(nums);
+double solve(int n, vector<double> &nums){
     sort(all(nums));
     double res = 1e200;
     fore(i,0,n-2){
@@ -42,20 +38,27 @@ void solve(){
                 if(nums[m]>nums[i]+nums[j])r = m;
                 else l = m;
             }
-            if(l>=n)continue;
+            if(l>=n || nums[l]<=nums[i]+nums[j])continue;
             double s = (nums[i] + nums[j] + nums[l]) / 2.00000;
             res = min(res,sqrt(s*(s-nums[i])*(s-nums[j])*(s-nums[l])));
         }
     }
-    if(res >= 1e200)show(-1);
-    else cout<<setprecision(10)<<fixed<<res<<'\n';
+    return res;
 }
 
 int main(){
     FIN;
     int t = 1;
     cin>>t;
-    while(t--)solve();
+    while(t--){
+        int n;
+        cin>>n;
+        vector<double> nums(n);
+        input(nums);
+        double res = solve(n,nums);
+        if(res>=1e200)show(-1);
+        else cout<<setprecision(10)<<fixed<<res<<'\n';
+    };
     return 0;
 }
 

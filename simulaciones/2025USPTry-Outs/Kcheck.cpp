@@ -27,24 +27,24 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-double brute(int n, vector<int> &nums){
-    double res = 1e200;
+double brute(int n, vector<double> &nums){
+    double res = 10e200;
     fore(i,0,n)fore(j,i+1,n)fore(k,j+1,n){
         vector<int> a(3);
         a[0] = nums[i];
         a[1] = nums[j];
         a[2] = nums[k];
         sort(all(a));
-        if(a[0]+a[1]>=a[2])continue;
+        if(a[0]+a[1]<=a[2])continue;
         double s = (nums[i] + nums[j] + nums[k]) / 2.00000;
         res = min(res, sqrt(s*(s-nums[i])*(s-nums[j])*(s-nums[k])));
     }
     return res;
 }
 
-double solve(int n, vector<int> &nums){
+double solve(int n, vector<double> &nums){
     sort(all(nums));
-    double res = 1e200;
+    double res = 10e200;
     fore(i,0,n-2){
         fore(j,1,n-1){
             int l = j+1, r = n;
@@ -64,13 +64,18 @@ double solve(int n, vector<int> &nums){
 int main(){
     FIN;
     fore(_,0,100){
-        vector<int> nums(20);
+        vector<double> nums(20);
         fore(i,0,20){
             nums[i] = rand()%501;
         }
         double b = brute(20,nums);
         double res = solve(20,nums);
-        if(b != res)showAll(nums);
+        if(b != res){
+            showAll(nums);
+            DGB(b);
+            DGB(res);
+        }
+        DGB(b);
         //assert((brute(20,nums) == solve(20,nums)));
     }
     return 0;
