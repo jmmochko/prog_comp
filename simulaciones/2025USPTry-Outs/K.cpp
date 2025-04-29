@@ -1,66 +1,59 @@
 #include <bits/stdc++.h>
-#define FIN ios::sync_with_stdio(0);cin.tie(0);cout.tie(0)
-#define pb push_back
-#define fore(a,b,c) for(int a=b; a<c; ++a)
-#define dfore(a,b,c) for(int a=b; a>=c; --a)
-#define SZ(a) ((int)a.size())
 #define fst first
 #define snd second
+#define fore(i,a,b) for(ll i=a,ThxDem=b;i<ThxDem;++i)
+#define dfore(a,b,c) for(int a=b; a>=c; --a)
+#define DGB(a) cout<<#a<<" = "<<a<<"\n"
+#define RAYA cout<<"=============="<<"\n"
 #define show(a) cout<<a<<"\n"
 #define showAll(a) for(auto i:a) cout<<i<<" ";cout<<"\n"
 #define input(a) for(auto& i:a) cin>>i
-#define all(a) a.begin(),a.end()
-#define DGB(a) cout<<#a<<" = "<<a<<"\n"
-#define RAYA cout<<"=============="<<"\n"
-#define pii pair<int,int>
-#define pll pair<ll,ll>
-#define MAXN 200005
-#define ALPH 26
-#define M 1000000007
-#define MAXINT (1<<30)
-#define MAXll (1ll<<60)
-#define PI 3.141592653
+#define pb push_back
+#define ALL(s) s.begin(),s.end()
+#define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
+#define SZ(s) ll(s.size())
 using namespace std;
 typedef long long ll;
-typedef unsigned int ui;
-typedef unsigned long long ull;
-
-//El Vasito is love, El Vasito is life
-
-double solve(int n, vector<double> &nums){
-    sort(all(nums));
-    double res = 1e200;
-    fore(i,0,n-2){
-        fore(j,1,n-1){
-            int l = j+1, r = n;
-            while(l+1<r){
-                int m = (l+r)/2;
-                if(nums[m]>nums[i]+nums[j])r = m;
-                else l = m;
-            }
-            if(l>=n || nums[l]<=nums[i]+nums[j])continue;
-            double s = (nums[i] + nums[j] + nums[l]) / 2.00000;
-            res = min(res,sqrt(s*(s-nums[i])*(s-nums[j])*(s-nums[l])));
-        }
-    }
-    return res;
-}
+typedef pair<ll,ll> ii;
 
 int main(){
     FIN;
-    int t = 1;
-    cin>>t;
+    ll t = 1;
+    cin >> t;
     while(t--){
-        int n;
-        cin>>n;
-        vector<double> nums(n);
-        input(nums);
-        double res = solve(n,nums);
-        if(res>=1e200)show(-1);
-        else cout<<setprecision(10)<<fixed<<res<<'\n';
-    };
-    return 0;
-}
+        ll n; cin >> n;
+        vector<double> a(n);
+        fore(i,0,n){
+            cin >> a[i];
+        }
+        sort(ALL(a));
+        reverse(ALL(a));
+        double min_area = 100000000000;
+        fore(i,0,n-2){
+            fore(j,i+1,n-1){
 
-//Cue "Eye of the Tiger"
-// minimizar esto: s*(s-nums[i])*(s-nums[j])*(s-nums[l])
+                double x = (a[i] - a[j]); // cota que quiero buscar
+                ll l = j+1, r = n;
+                while(l + 1 < r){
+                    ll m = (l+r)/2;
+                    if(a[m] > x){
+                        l = m;
+                    } else{
+                        r = m;
+                    }
+                }
+                if(l>=n) continue;
+                double k = a[l];
+                if(a[i] > a[j] + k) continue;
+                double s = double((double(a[i]) + double(a[j]) + k)/double(2));
+                s = sqrt(s*(s-a[i])*(s-a[j])*(s-k));
+                min_area = min(min_area,s);
+            }
+        }
+        if(min_area == 100000000000){
+            cout << "-1\n";
+        } else{
+            cout << min_area << setprecision(10) << fixed << "\n";
+        }
+    }
+}
