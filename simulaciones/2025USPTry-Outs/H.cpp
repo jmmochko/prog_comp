@@ -14,8 +14,8 @@
 #define RAYA cout<<"=============="<<"\n"
 #define pii pair<int,int>
 #define pll pair<ll,ll>
-#define MAXN 5001
-#define MAXM 5001
+#define MAXN 1001
+#define MAXM 1001
 #define ALPH 26
 #define MAXINT (1<<30)
 #define MAXll (1ll<<60)
@@ -45,36 +45,23 @@ vector<pair<int,int> > max_matching(){
 void solve(){
     int N,M;
     cin>>N>>M;
-    fore(i,0,M+1)g[i].clear();
-    int G[N][N];
-    vector<int> GG[N];
-    fore(i,0,N)fore(j,0,N)G[i][j] = -1;
+    n = N; m = N;
+    fore(i,0,n)g[i].clear();
     fore(i,0,M){
         int u,v;
         cin>>u>>v;
         --u;--v;
-        G[u][v] = i;
-        G[v][u] = i;
-        GG[u].pb(v);
-        GG[v].pb(u);
-        g[i].clear();
+        g[v].push_back(u);
+        g[u].push_back(v);
     }
-    fore(i,0,N)fore(j,0,M){
-        if(G[i][j]!=-1){
-            int a = G[i][j];
-            for(auto x: GG[i]){
-                if(G[x][i]>a)g[a].pb(G[x][i]);
-                if(G[x][j]>a)g[a].pb(G[x][j]);
-            }
-        }
-    }
-    n = M;
-    m = M;
     vector<pii> res = max_matching();
-    fore(i,0,SZ(res)){
-        DGB(res[i].fst);DGB(res[i].snd);
-    }
-    show(SZ(res));
+    int dobles = SZ(res)/2;
+    /*DGB(dobles);
+    DGB(max(0,(n-(2*dobles))));
+    fore(i,0,dobles){
+        cout<<res[i].fst<<" "<<res[i].second<<'\n';
+    }*/
+    show(dobles + max(0,(n-(2*dobles))));
 }
 
 int main(){
