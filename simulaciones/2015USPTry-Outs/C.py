@@ -3,7 +3,7 @@ import math
 def solve():
     T = int(input())
     input_lines = [input().split(" ") for i in range(T)]
-    for line in input_lines[0:T]:
+    for line in input_lines:
         alpha = float(line[0])
         l = float(line[1])
         n = int(line[2])
@@ -26,9 +26,9 @@ def solve():
             else:
                 S = l * numerator / denominator
                 x = S.real
-                y = -S.imag  
+                y = S.imag
 
-        print("{0:.8f} {1:.8f}".format(x, -y))
+        print("{0:.8f} {1:.8f}".format(x, y))
 
 if __name__ == "__main__":
     solve()
