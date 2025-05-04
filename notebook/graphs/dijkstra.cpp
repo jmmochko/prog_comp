@@ -7,7 +7,7 @@
 typedef long long ll;
 using namespace std;
 
-vector<pair<int,int> > g[MAXN];  // u->[(v,cost)]
+vector<pair<int,ll> > g[MAXN];  // u->[(v,cost)]
 ll dist[MAXN];
 void dijkstra(int x){
 	memset(dist,-1,sizeof(dist));
