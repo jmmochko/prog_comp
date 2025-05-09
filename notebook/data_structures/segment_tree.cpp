@@ -25,8 +25,6 @@ typedef long long ll;
 typedef unsigned int ui;
 typedef unsigned long long ull;
 
-//from https://github.com/mhunicken/icpc-team-notebook-el-vasito
-
 #define oper(a,b) a+b
 #define NEUT 0
 struct STree { // segment tree for oper over lls
