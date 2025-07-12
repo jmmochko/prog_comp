@@ -44,9 +44,7 @@ ll f(int i, ll k){// min cantidad de vida que necesito para poder matar a estos 
 }
 
 bool cmp(pll &a, pll &b){
-    if(a.fst - a.snd > b.fst - b.snd)return true;
-    if(a.fst - a.snd < b.fst - b.snd)return false;
-    return a.fst < b.fst;
+    return a.snd < b.snd;
 }
 
 bool solve(vector<pll> &Ds, int k, ll h){
@@ -135,6 +133,7 @@ int main(){
     return 0;
 }
 */
+
 int main(){
     FIN;
     int t;
