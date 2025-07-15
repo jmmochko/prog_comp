@@ -6,10 +6,11 @@
 #define snd second
 #define all(a) a.begin(),a.end()
 #define pb push_back
+#define DGB(a) cout<<#a<<" = "<<a<<'\n'
 using namespace std;
 typedef long long ll;
 
-const double EPS = 0.0000001;
+const double EPS = 0.00000001;
 const double DINF = 1e200;
 
 struct pt {  // for 3D add z coordinate
@@ -65,41 +66,51 @@ struct ln {
 	long double dist(pt r){return (r-proj(r)).norm();}
 };
 
-const double pi = acos(-1.00);
+const long double pi = acos(-1.00);
 
 double toRad(double a){
     return (pi*a)/(double)180;
 }
 
-double dp[1<<20];
-int n,l,r;
-vector<double> x(n),y(n),a(n);
+long double dp[1<<20 + 1];
+int n;
+long double l,r;
+const int MAXN = 21;
+vector<long double> x(MAXN),y(MAXN),a(MAXN);
 
-double cuenta(int i, double desde){
-    ln ejeX(pt(0,0),pt(1,0));
-    pt lamparita(x[i],y[i]);
-    ln rayo(lamparita,pt(desde,0));
+long double cuenta(int i, double desde){
+    long double beta = atan2(y[i],x[i] - desde);
+	if(a[i] + beta + EPS >= pi)return r;
+	long double largoB = sqrt((x[i] - desde)*(x[i] - desde) + y[i]*y[i]);
+	long double otro = pi - a[i] - beta;
+	long double res = (sin(a[i])*largoB)/sin(otro);
+//	DGB(a[i]);DGB(beta);DGB(largoB);DGB(otro);DGB(res); 
+	return desde + res;
 }
 
-double f(int i){
-    if(i==0)return 0;
-    if(dp[i]!=-1)return dp[i];
-    dp[i] = 0.000;
+long double f(int i){
+    if(i==0)return l;
+    if(dp[i]!=l-1)return dp[i];
+    dp[i] = l;
     fore(b,0,20){
         if(i & (1<<b)){
-            dp[i] = max(dp[i], f(i - (1<<b)) + cuenta(i,f(i - (1<<b))));
+            dp[i] = max(dp[i], cuenta(b,f(i - (1<<b))));
+			dp[i] = min(dp[i],(long double)r);
         }
     }
+	return dp[i];
 }
 
 int main(){
     FIN;
     cin>>n>>l>>r;
-    
     fore(i,0,n){
         cin>>x[i]>>y[i]>>a[i];
         a[i] = toRad(a[i]);
     }
-    
+    fore(i,0,1<<20 + 1){
+		dp[i] = l-1;
+	}
+	cout<<setprecision(10)<<fixed<<f((1<<n) - 1)-l<<'\n';
     return 0;
 }
