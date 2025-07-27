@@ -27,15 +27,39 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-void solve(){
-
-}
-
 int main(){
     FIN;
-    int t = 1;
-    cin>>t;
-    while(t--)solve();
+    int n;
+    cin>>n;
+    string s;
+    cin>>s;
+    int estoy = 0, perc = 0;
+    bool gane = false;
+    fore(i,0,n){
+        if(estoy<4){
+            if(s[i]=='G')++estoy;
+        }
+        else if(estoy<8){
+            if(s[i]=='G'){++estoy;perc = 0;}
+            else ++perc;
+            if(perc >= 2){
+                estoy = max(estoy-1,4);
+            }
+        }
+        else{
+            if(s[i]=='G'){++estoy;}
+            else estoy = max(8,estoy-1);
+            if(estoy == 12)gane = true;
+        }
+    }
+    if(gane){
+        show("CLASIFICADO");
+    }
+    else{
+        if(estoy<4)show(1);
+        else if (estoy<8)show(2);
+        else show(3);
+    }
     return 0;
 }
 

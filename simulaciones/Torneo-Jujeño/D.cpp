@@ -27,15 +27,15 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-void solve(){
-
-}
-
+//si voy al mas cercano?
 int main(){
     FIN;
-    int t = 1;
-    cin>>t;
-    while(t--)solve();
+    int n;
+    cin>>n;
+    string s;
+    cin>>s;
+    vector<int> res(n,-1);
+    
     return 0;
 }
 

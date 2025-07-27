@@ -27,8 +27,31 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-void solve(){
+vector<ll> primes = {2,3,5,7};
+vector<ll> cmb = {2*3, 2*5, 2*7, 3*5, 3*7, 5*7};
+vector<ll> cmb2 = {2*3*5, 2*5*7, 2*3*7, 3*5*7};
 
+//cuantos n con primos en la fact hay entre 0 y n;
+
+ll malN(ll n){
+    ll res = 0;
+    for(ll p: primes){
+        res += n/p;
+    }
+    for(ll c: cmb){
+        res -= n/c;
+    }
+    for(ll c: cmb2){
+        res += n/c;
+    }
+    return res - n/(2*3*5*7);
+}
+
+void solve(){
+    ll l,r;
+    cin>>l>>r;
+    ll complemento = malN(r) - malN(l-1);
+    show(r - l - complemento + 1);
 }
 
 int main(){

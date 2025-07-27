@@ -28,7 +28,18 @@ typedef unsigned long long ull;
 //El Vasito is love, El Vasito is life
 
 void solve(){
-
+    string s;
+    cin>>s;
+    string res;
+    int cnt = 0;
+    fore(i,0,SZ(s)){
+        if(s[i]!='T'){
+            res.pb(s[i]);
+        }
+        else ++cnt;
+    }
+    fore(i,0,cnt)cout<<'T';
+    show(res);
 }
 
 int main(){

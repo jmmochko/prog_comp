@@ -27,8 +27,22 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-void solve(){
+ll gcd(ll a, ll b){return a?gcd(b%a,a):b;}
 
+void solve(){
+    ll a,b,k;
+    cin>>a>>b>>k;
+    if(a>b)swap(a,b);
+    if(b<=k){
+        show(1);
+        return;
+    }
+    ll g = gcd(a,b);
+    if(b/g<=k){
+        show(1);
+        return;
+    }
+    show(2);
 }
 
 int main(){
