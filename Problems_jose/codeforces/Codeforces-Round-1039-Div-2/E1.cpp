@@ -27,39 +27,58 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-void solve(){
-    int n;
-    cin>>n;
-    vector<int> nums(n);
-    input(nums);
-    int l = 0,r = n-1;
-    bool bg = true;
-    while(l<r){
-        if(bg){
-            if(nums[l]>nums[r]){
-                cout<<'L'<<'R';
-            }
-            else cout<<'R'<<'L';
-        }
-        else{
-            if(nums[l]<nums[r]){
-                cout<<'L'<<'R';
-            }
-            else cout<<'R'<<'L';
-        }
-        bg = !bg;
-        ++l;
-        --r;
+bool can(int k, ll m, vector<ll> &nums){
+    int n = SZ(nums);
+    vector<int> ps(n+1);
+    ps[0] = 0;
+    fore(i,0,n){
+        ps[i+1] = ps[i];
+        if(nums[i]>m)++ps[i+1];
+        if(nums[i]<m)--ps[i+1];
     }
-    if(n&1)cout<<"L";
-    cout<<'\n';
+    vector<bool> vistos(2*(n+1),false);
+    vistos[n] = true;
+    fore(i,k-1,n){
+        if(vistos[n + ps[i+1]])return true;
+        vistos[n + ps[i-k+2]] = true;
+    }
+    return false;
+}
+
+ll brute(int k, vector<ll> &nums){
+    ll res = 0;
+    fore(i,1,SZ(nums)+1){
+        if(can(k,i,nums))res = i;
+    }
+    return res;
+}
+
+void solve(){
+    int k,n;
+    cin>>n>>k;
+    vector<ll> nums(n);
+    input(nums);
+    ll l = 0,r = n;
+    while(l+1<r){
+        ll m = (l+r)/2;
+        if(can(k,m,nums))l = m;
+        else r = m;
+    }
+    if(can(k,r,nums))show(r);
+    else show(l);
 }
 
 int main(){
     FIN;
     int t = 1;
     cin>>t;
-    while(t--)solve();
+    while(t--){
+        int k,n;
+        cin>>n>>k;
+        vector<ll> nums(n);
+        input(nums);
+        show(brute(k,nums));
+    }
     return 0;
 }
 

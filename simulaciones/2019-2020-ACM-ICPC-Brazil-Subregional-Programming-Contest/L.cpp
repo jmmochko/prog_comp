@@ -27,39 +27,37 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
-void solve(){
-    int n;
-    cin>>n;
-    vector<int> nums(n);
-    input(nums);
-    int l = 0,r = n-1;
-    bool bg = true;
-    while(l<r){
-        if(bg){
-            if(nums[l]>nums[r]){
-                cout<<'L'<<'R';
-            }
-            else cout<<'R'<<'L';
-        }
-        else{
-            if(nums[l]<nums[r]){
-                cout<<'L'<<'R';
-            }
-            else cout<<'R'<<'L';
-        }
-        bg = !bg;
-        ++l;
-        --r;
+ll ft2(ll n){
+    ll cmp = 2;
+    ll res = 0;
+    while(cmp<=n){
+        res += n/cmp;
+        cmp*=2;
     }
-    if(n&1)cout<<"L";
-    cout<<'\n';
+    return res;
+}
+
+ll brute(ll n){
+    ll res = 0;
+    fore(k,0,n+1){
+        if(ft2(n)<=ft2(n-k) + ft2(k)){++res;}
+    }
+    return res;
+}
+
+ll cnt(ll n){
+    ll res = 0;
+    fore(i,0,64){
+        if((1ll<<i) & n)++res;
+    }
+    return 1ll<<res;
 }
 
 int main(){
     FIN;
-    int t = 1;
-    cin>>t;
-    while(t--)solve();
+    ll n;
+    cin>>n;
+    show(cnt(n));
     return 0;
 }
 
