@@ -30,7 +30,7 @@ typedef unsigned long long ull;
 string cartas = "A23456789DQJK";
 
 int main(){
-    FIN;
+    //FIN;
     int n,k;
     cin>>n>>k;
     --k;
@@ -41,41 +41,63 @@ int main(){
         fore(k,0,4){
             char a;
             cin>>a;
-            cr[i].insert(pos[i]);
+            cr[i].insert(pos[a]);
         }
     }
     cr[k].insert(100);
     bool paso = false;
     int ganador = -1;
-    while(true){
+    //int ppp = 0;
+    fore(p,0,n){
+        fore(i,0,SZ(cartas)){
+            if(cr[p].count(i)==4 && SZ(cr[p])==4){
+                ganador = p;
+            }
+        }
+        if(ganador != -1)break;
+    }
+    while(1){
+        //DGB(k);
+        //showAll(cr[k]);
         //elijo carta player k
         fore(i,0,SZ(cartas)){
-            if(cr[k].count(i)==4 || cr[k].count(i)==3 && cr[k].count(100)){
+            if(cr[k].count(i)==4 && SZ(cr[k])==4){
                 ganador = k;
             }
         }
         if(ganador != -1)break;
         int card;
+        bool flag = false;
         if(paso && cr[k].count(100)){
-            card = 100;
+            card = 100;flag = true;
         }
-        if(cr[k].count(100))paso = true;
         else{
-            int mx = 0;
+            int mn = 20;
             fore(i,0,SZ(cartas)){
-                if(cr[k].count(i)>mx){
-                    mx = cr[k].count(i);
+                if(cr[k].count(i)<mn && cr[k].count(i)){
+                    mn = cr[k].count(i);
                     card = i;
                 }
             }
         }
-        cr[k].erase(cr[k].find(card));
-        --k;
-        if(k<0)k+=n;
+        if(cr[k].count(100))paso = true;
+        auto it = cr[k].find(card);
+        cr[k].erase(it);
+        fore(i,0,SZ(cartas)){
+            if(cr[k].count(i)==4 && SZ(cr[k])==4){
+                ganador = k;
+            }
+        }
+        //DGB(card);
+        //RAYA;
+        if(ganador != -1)break;
+        ++k;
+        if(k>=n)k-=n;
         cr[k].insert(card);
         if(card==100)paso = false;
+        //++ppp;
     }
-    show(ganador + 2);
+    show(ganador + 1);
     return 0;
 }
 
