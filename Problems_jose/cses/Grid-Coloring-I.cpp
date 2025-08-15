@@ -29,37 +29,21 @@ typedef unsigned long long ull;
 
 int main(){
     FIN;
-    int n;
-    cin>>n;
-    if(n==1){
-        show(2);
-        return 0;
+    int n,m;
+    cin>>n>>m;
+    string mat[n];
+    fore(i,0,n)cin>>mat[i];
+    fore(i,0,n)fore(j,0,m){
+        if((i + j)%2){
+            if(mat[i][j] == 'A')mat[i][j] = 'B';
+            else mat[i][j] = 'A';
+        }
+        else{
+            if(mat[i][j] == 'C')mat[i][j] = 'D';
+            else mat[i][j] = 'C';
+        }
     }
-    ll p2[n+1];//2**i
-    p2[0]=1;
-    fore(i,1,n+1){
-        p2[i] = (p2[i-1]*2) % M;
-    }
-    ll borde[n+1];//formas de resolver para tamaño i arrancando desde un borde
-    borde[0] = 0;
-    borde[1] = 2;
-    borde[2] = 12;
-    fore(i,3,n+1){
-        ll voyyvuelvo = p2[i-1];
-        ll completo = borde[i-1];
-        ll cruzado = (2*borde[i-2])%M;
-        borde[i] = (2*((voyyvuelvo + completo + cruzado)%M))%M;
-    }
-    ll res = (2*borde[n])%M;
-    fore(i,2,n){
-        //sumo las formas de arrancar aca
-        // voy y vuelvo izq
-        ll formas1 = (p2[i-1]*borde[n-i]) % M;
-        //viceversa
-        ll formas2 = (p2[n-i]*borde[i-1]) % M;
-        res = (res + (2*((formas1 + formas2)%M)%M))%M;
-    }
-    show(res);
+    fore(i,0,n)show(mat[i]);
     return 0;
 }
 

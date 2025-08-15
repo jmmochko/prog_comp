@@ -14,7 +14,7 @@
 #define RAYA cout<<"=============="<<"\n"
 #define pii pair<int,int>
 #define pll pair<ll,ll>
-#define MAXN 200005
+#define MAXN 1000005
 #define ALPH 26
 #define M 1000000007
 #define MAXINT (1<<30)
@@ -27,39 +27,28 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
+int dp[MAXN];
+
+int f(int n){
+    //DGB(n);
+    if(dp[n]!=0)return dp[n];
+    if(n<10)return 1;
+    int res = n, cmp = 1;
+    while(cmp <= n){
+        int d = (n/cmp)%10;
+        if(d==0){cmp*=10;continue;}
+        res = min(res,f(n-d));
+        cmp*=10;
+    }
+    dp[n] = 1 + res;
+    return dp[n];
+}
+
 int main(){
-    FIN;
+    //FIN;
     int n;
     cin>>n;
-    if(n==1){
-        show(2);
-        return 0;
-    }
-    ll p2[n+1];//2**i
-    p2[0]=1;
-    fore(i,1,n+1){
-        p2[i] = (p2[i-1]*2) % M;
-    }
-    ll borde[n+1];//formas de resolver para tamaño i arrancando desde un borde
-    borde[0] = 0;
-    borde[1] = 2;
-    borde[2] = 12;
-    fore(i,3,n+1){
-        ll voyyvuelvo = p2[i-1];
-        ll completo = borde[i-1];
-        ll cruzado = (2*borde[i-2])%M;
-        borde[i] = (2*((voyyvuelvo + completo + cruzado)%M))%M;
-    }
-    ll res = (2*borde[n])%M;
-    fore(i,2,n){
-        //sumo las formas de arrancar aca
-        // voy y vuelvo izq
-        ll formas1 = (p2[i-1]*borde[n-i]) % M;
-        //viceversa
-        ll formas2 = (p2[n-i]*borde[i-1]) % M;
-        res = (res + (2*((formas1 + formas2)%M)%M))%M;
-    }
-    show(res);
+    show(f(n));
     return 0;
 }
 

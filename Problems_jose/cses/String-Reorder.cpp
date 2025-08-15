@@ -29,37 +29,31 @@ typedef unsigned long long ull;
 
 int main(){
     FIN;
-    int n;
-    cin>>n;
-    if(n==1){
-        show(2);
+    string s;
+    cin>>s;
+    vector<int> occs(ALPH,0);
+    fore(i,0,SZ(s))occs[s[i]-'A']++;
+    fore(i,0,ALPH)if(occs[i]>(SZ(s) + 1)/2){
+        show(-1);
         return 0;
     }
-    ll p2[n+1];//2**i
-    p2[0]=1;
-    fore(i,1,n+1){
-        p2[i] = (p2[i-1]*2) % M;
+    string res = "=";
+    fore(i,0,SZ(s)){
+        fore(k,0,ALPH){
+            if(occs[k]>(SZ(s)-i)/2){
+                res.pb(k+'A');
+                --occs[k];
+                break;
+            }
+        }
+        if(SZ(res)>i+1)continue;
+        int k = 0;
+        while(!occs[k] || k+'A' == res[SZ(res)-1])++k;
+        res.pb(k+'A');
+        --occs[k];
     }
-    ll borde[n+1];//formas de resolver para tamaño i arrancando desde un borde
-    borde[0] = 0;
-    borde[1] = 2;
-    borde[2] = 12;
-    fore(i,3,n+1){
-        ll voyyvuelvo = p2[i-1];
-        ll completo = borde[i-1];
-        ll cruzado = (2*borde[i-2])%M;
-        borde[i] = (2*((voyyvuelvo + completo + cruzado)%M))%M;
-    }
-    ll res = (2*borde[n])%M;
-    fore(i,2,n){
-        //sumo las formas de arrancar aca
-        // voy y vuelvo izq
-        ll formas1 = (p2[i-1]*borde[n-i]) % M;
-        //viceversa
-        ll formas2 = (p2[n-i]*borde[i-1]) % M;
-        res = (res + (2*((formas1 + formas2)%M)%M))%M;
-    }
-    show(res);
+    fore(i,1,SZ(res))cout<<res[i];
+    cout<<'\n';
     return 0;
 }
 
