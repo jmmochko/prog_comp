@@ -59,14 +59,14 @@ ll init0(int u){
     return ceros[u];
 }
 
-ll dfs(int u, ll llevo){//vertice, cantidad de 1s que llevo
+ll dfs(int u){//vertice, cantidad de 1s que llevo
     if(vis[u])return invs[u]%M;
-    llevo = 0;
+    ll llevo = 0;
     vis[u] = true;
     for(auto v:g[u]){
         if(v.snd == 0)invs[u] = add(invs[u],llevo);
         else llevo = add(1,llevo);
-        invs[u] = add(invs[u],add(dfs(v.fst,llevo),mul(llevo,ceros[v.fst])));
+        invs[u] = add(invs[u],add(dfs(v.fst),mul(llevo,ceros[v.fst])));
         llevo = add(llevo,unos[v.fst]);
     }
     return invs[u]%M;
@@ -89,7 +89,7 @@ int main(){
     fore(i,0,n)vis[i] = false;
     init1(0);
     fore(i,0,n)vis[i] = false;
-    cout<<dfs(0,0)<<'\n';
+    cout<<dfs(0)<<'\n';
     //fore(i,0,n){DGB(i);DGB(ceros[i]);DGB(unos[i]);DGB(invs[i]);RAYA;}
     return 0;
 }

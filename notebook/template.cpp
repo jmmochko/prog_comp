@@ -39,4 +39,4 @@ int main(){
     return 0;
 }
 
-//Sobrevivimos al pabellon
+//Returneamos al pabellón
