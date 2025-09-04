@@ -52,18 +52,39 @@ ll comb(ll n, ll k){
     return dv(fact(n-k+1,n),fact(1,k));
 }
 
+vector<ll> lim(ll *nums, ll n, ll k){
+    vector<ll> res(n,0);
+    fore(i,k-1,n){res[i] = nums[i-k+1];}
+    ll acc = 0;
+    fore(i,k-1,n){
+        res[i] -= acc;
+        acc += res[i] - res[i-k+1];
+    }
+    fore(i,k,n){
+        if(i%k != k-1)res[i%k] = max(res[i%k],-res[i]);
+    }
+    int i = k-1;
+    res[k-1] = nums[0];
+    while(i<n){
+        res[k-1] = min(res[i],res[k-1]);
+        i += k;
+    }
+    return res;
+}
+
 int main(){
-    //FIN;
+    FIN;
     ll n,k;
     cin>>n>>k;
-    vector<ll> nums(n-k+1);
+    ll nums[n-k+1];
     fore(i,0,n-k+1)cin>>nums[i];
-    ll mn = nums[0];
-    fore(i,1,n-k+1){
-        mn = min(nums[i],mn);
+    vector<ll> lims = lim(nums,n,k);
+    ll suma = lims[k-1];
+    fore(i,0,k-1)suma -= lims[i];
+    if(suma<0){
+        cout<<"0\n";
+        return 0;
     }
-    DGB(mn);
-    DGB(sub(add(k,mn),1));DGB(sub(mn,1));DGB(comb(4,2));DGB(dv(9,3));
-    cout<<comb(sub(add(k,mn),1),sub(mn,1))<<'\n';
+    cout<<comb(k + suma - 1,k - 1)<<'\n';
     return 0;
 }
