@@ -27,11 +27,49 @@ typedef unsigned long long ull;
 
 //El Vasito is love, El Vasito is life
 
+ll add(ll a, ll b){return (a+b)%M;}
+ll sub(ll a, ll b){
+    a -= b;
+    while(a<0)a += M;
+    return a%M;
+}
+ll mul(ll a, ll b){return (a*b)%M;}
+ll fpow(ll b, ll e){
+    if(e==0)return 1;
+    ll m = fpow(b,e/2);
+    m = mul(m,m);
+    if(e&1)m = mul(m,b);
+    return m;
+}
+ll dv(ll a, ll b){
+    ll inv = fpow(b,M-2);
+    return mul(a,inv);
+}
 
+ll n,k;
+ll fact[2*MAXN+1];
+
+ll moi(ll vacios){//cnt con mayor o igual cantidad de vacios
+    if(vacios>n)return 0;
+    ll antes = min(n-vacios+1,k+1), iguales = k-(n-vacios);
+    //DGB(vacios);DGB(antes);DGB(iguales);RAYA;
+    if(iguales<0)return fact[antes];
+    return mul(fact[antes],fpow(antes,iguales));
+}
 
 int main(){
     FIN;
-
+    cin>>n>>k;
+    fact[0] = 1;
+    fore(i,1,2*MAXN+1){fact[i] = mul(fact[i-1],i);}
+    ll res = 1;
+    fore(vacios,0,n){
+        ll sinorden = sub(moi(vacios),moi(vacios+1));
+        ll ordenes = dv(fact[n],fact[vacios]);
+        res = add(res,mul(sinorden,ordenes));
+        //DGB(vacios);DGB(sinorden);DGB(ordenes);DGB(moi(vacios));DGB(moi(vacios+1));DGB(res);RAYA;
+    }
+    cout<<res<<'\n';
     return 0;
 }
 
